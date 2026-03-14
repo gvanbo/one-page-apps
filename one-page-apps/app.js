@@ -14,19 +14,25 @@ const projectDocumentation = {
   status: {
     phase: "Gallery infrastructure active",
     summary:
-      "Homepage catalog, import workflow guidance, and custom importer agent are in place.",
+      "Homepage catalog, import workflow guidance, and both custom agents (import + documentation audit) are in place.",
     lastUpdated: "2026-03-14",
   },
   changes: [
     "Created gallery homepage with dynamic app cards and launch links.",
     "Added standardized Gemini pre-prompt template for quality and CSS consistency.",
     "Added custom workspace agent for app import automation.",
+    "Added documentation audit agent and update-status checklist workflow.",
   ],
   references: [
     {
       label: "Importer Agent",
       path: "./.github/agents/gemini-app-importer.agent.md",
       note: "Automation instructions for adding new generated apps.",
+    },
+    {
+      label: "Documentation Accuracy Agent",
+      path: "./.github/agents/documentation-accuracy-guardian.agent.md",
+      note: "Audits and synchronizes status, change log, and key file references.",
     },
     {
       label: "Gemini Prompt Template",
@@ -42,6 +48,11 @@ const projectDocumentation = {
       label: "Repository Guide",
       path: "./README.md",
       note: "Explains structure and operator workflow.",
+    },
+    {
+      label: "Status Update Checklist",
+      path: "./README.md",
+      note: "Operational checklist used after imports and structural changes.",
     },
   ],
 };
@@ -121,7 +132,7 @@ function renderProjectDocumentation(doc) {
 
   const referencesCard = `
     <article class="doc-card" aria-labelledby="doc-refs-title">
-      <h3 id="doc-refs-title">Important Agent Files</h3>
+      <h3 id="doc-refs-title">Important Files for Agents</h3>
       <ul class="doc-list doc-links">
         ${doc.references
           .map(

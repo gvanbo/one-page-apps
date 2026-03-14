@@ -14,6 +14,12 @@ Use the custom workspace agent `gemini-app-importer` to automate app onboarding:
 2. Provide app metadata (name, title, description, tags) plus generated HTML.
 3. The agent creates `apps/<app-name>/index.html`, updates `app.js`, and validates changes.
 
+Use the custom workspace agent `documentation-accuracy-guardian` to keep docs aligned with repository state:
+
+1. Open Copilot Chat and select the `documentation-accuracy-guardian` agent.
+2. Ask for a documentation audit and sync.
+3. The agent verifies `app.js` documentation fields, checks file references, and updates `README.md`/`app.js` as needed.
+
 ## Structure
 
 - `index.html`: Gallery homepage
@@ -38,6 +44,17 @@ Use the custom workspace agent `gemini-app-importer` to automate app onboarding:
 ```
 
 4. Open `index.html` in a browser and launch from the gallery.
+
+## Update Status Checklist
+
+Run this checklist after every app import or structural change:
+
+1. Update `projectDocumentation.status` in `app.js`.
+2. Add or revise one bullet in `projectDocumentation.changes` in `app.js`.
+3. Verify every `projectDocumentation.references[].path` exists.
+4. Update `projectDocumentation.status.lastUpdated` with current date (`YYYY-MM-DD`).
+5. Confirm README workflow and agent sections still match implementation.
+6. Reload `index.html` and verify the documentation section renders correctly.
 
 ## Notes
 
