@@ -23,6 +23,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify index.html exists
+        run: test -f index.html || (echo "index.html not found at repo root" && exit 1)
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
