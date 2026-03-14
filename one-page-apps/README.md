@@ -56,6 +56,31 @@ Run this checklist after every app import or structural change:
 5. Confirm README workflow and agent sections still match implementation.
 6. Reload `index.html` and verify the documentation section renders correctly.
 
+## Publish with GitHub Pages
+
+This repository is configured to deploy with GitHub Actions using `.github/workflows/deploy-pages.yml`.
+
+[![Deploy GitHub Pages](https://github.com/gvanbo/one-page-apps/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/gvanbo/one-page-apps/actions/workflows/deploy-pages.yml)
+
+Workflow runs and logs:
+
+- https://github.com/gvanbo/one-page-apps/actions/workflows/deploy-pages.yml
+
+One-time setup in GitHub:
+
+1. Open repository Settings -> Pages.
+2. Under Build and deployment, set Source to GitHub Actions.
+3. Push to `main` (or `master`) to trigger deployment.
+
+Expected site URL:
+
+- `https://gvanbo.github.io/one-page-apps/`
+
+Notes:
+
+- Deploy runs on each push to `main` and `master`.
+- If your default branch is `main`, merge there to publish the latest site.
+
 ## Notes
 
 - Keep each app self-contained inside its own folder.
