@@ -3,16 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Page Apps</title>
+    <title>Gemini Canvas App Gallery</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome to One Page Apps</h1>
+    <header class="hero">
+        <p class="eyebrow">one-page-apps</p>
+        <h1>Gemini Canvas App Gallery</h1>
+        <p class="subtitle">A single place to store and launch all one-page apps exported from Google Gemini Canvas.</p>
     </header>
-    <main id="app">
-        <p>Loading your awesome app...</p>
+<main id="app" class="gallery" aria-live="polite">
+    <p class="loading">Loading app catalog...</p>
     </main>
+<section class="docs" aria-labelledby="docs-title">
+    <div class="docs-header">
+        <h2 id="docs-title">Project Documentation</h2>
+        <p>Operational notes for maintainers and agents.</p>
+    </div>
+    <div id="project-docs" class="docs-grid" aria-live="polite">
+        <p class="loading">Loading project documentation...</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>Add new apps under <code>apps/&lt;app-name&gt;/index.html</code> and update the catalog in <code>app.js</code>.
+    </p>
+</footer>
+
     <script src="app.js"></script>
 </body>
 </html>
