@@ -38,6 +38,18 @@ If required inputs are missing, ask concise follow-up questions.
 - Keep links relative in catalog entries:
   - `path: "./apps/<app-name>/index.html"`
 
+## Workspace Routing (Two-Way Context)
+
+Use this routing when work spans repositories:
+
+- Inbound context:
+  - Accept course app requests and requirements from `nsa-content-general` and `nsa-pbr`.
+  - Accept generated HTML/assets from AI app generation workflows.
+- Outbound context:
+  - Route styling and brand consistency work to `nsa-design-system` when NSA visual standards are required.
+  - Route curriculum placement/final linking tasks back to `nsa-content-general` or `nsa-pbr`.
+  - Route workspace-level process updates to `nsa-tools` docs when importer workflow changes.
+
 ## Catalog Update Rules
 
 When editing `app.js`:

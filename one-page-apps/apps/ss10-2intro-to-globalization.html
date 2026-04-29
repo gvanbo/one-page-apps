@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Introduction to Globalization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Simple transitions for tab content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-gray-800 font-sans p-4 sm:p-8">
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-6 text-center">
+            <h1 class="text-3xl font-bold mb-2">Unit 1: Should Globalization Shape Identity?</h1>
+            <p class="text-lg text-blue-100">Week 1: Introduction to a Globalizing World</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap border-b border-slate-200 bg-slate-100">
+            <button onclick="openTab(event, 'intro')"
+                class="tab-btn flex-1 py-3 px-4 font-semibold text-blue-700 bg-white border-b-2 border-blue-600 focus:outline-none transition-colors">Start
+                Here</button>
+            <button onclick="openTab(event, 'economic')"
+                class="tab-btn flex-1 py-3 px-4 font-semibold text-slate-600 hover:bg-slate-200 focus:outline-none transition-colors">Economic</button>
+            <button onclick="openTab(event, 'social')"
+                class="tab-btn flex-1 py-3 px-4 font-semibold text-slate-600 hover:bg-slate-200 focus:outline-none transition-colors">Social</button>
+            <button onclick="openTab(event, 'political')"
+                class="tab-btn flex-1 py-3 px-4 font-semibold text-slate-600 hover:bg-slate-200 focus:outline-none transition-colors">Political</button>
+            <button onclick="openTab(event, 'quiz')"
+                class="tab-btn flex-1 py-3 px-4 font-semibold text-slate-600 hover:bg-slate-200 focus:outline-none transition-colors">Quick
+                Check</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="p-6 sm:p-8">
+
+            <!-- Intro Tab -->
+            <div id="intro" class="tab-content active">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">What is Globalization?</h2>
+                <p class="mb-4 text-lg">Have you ever heard the phrase, <em>"It's a small world"</em>? That phrase
+                    describes exactly what we are studying!</p>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r">
+                    <p class="text-lg"><strong>Globalization</strong> means countries are becoming more dependent on
+                        each other. The world's citizens are becoming increasingly connected.</p>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">How does it happen?</h3>
+                <ul class="list-disc list-inside space-y-2 ml-4 text-lg text-slate-700">
+                    <li>Cultures are shared worldwide.</li>
+                    <li>Goods are transported across borders.</li>
+                    <li>Communication is instant around the globe.</li>
+                </ul>
+                <div class="mt-8 p-5 bg-amber-50 rounded-lg border border-amber-200">
+                    <h4 class="font-bold text-amber-800 text-lg mb-2">Connecting to Your Identity</h4>
+                    <p>In Unit 1, we will explore how these global connections impact <strong>you</strong>. Throughout
+                        this course, always ask yourself: <em>Does this change who I am?</em></p>
+                </div>
+            </div>
+
+            <!-- Economic Tab -->
+            <div id="economic" class="tab-content">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Economic Globalization</h2>
+                <p class="mb-4 text-lg">The economic area of our lives involves handling money, transferring
+                    possessions, and providing services.</p>
+
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r">
+                    <p class="text-lg"><strong>Economic Globalization</strong> means a country’s economy is influenced
+                        heavily by other countries as goods are traded, imported, and exported.</p>
+                </div>
+
+                <h3 class="text-xl font-semibold mb-3">Key Terms to Know:</h3>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="p-4 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="font-bold text-blue-700 text-lg">Consumer</p>
+                        <p class="text-slate-600">Any person who buys products. (That includes you!)</p>
+                    </div>
+                    <div class="p-4 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="font-bold text-blue-700 text-lg">Transnationals</p>
+                        <p class="text-slate-600">A company that operates in two or more countries (like Walmart).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Tab -->
+            <div id="social" class="tab-content">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Social Globalization</h2>
+                <p class="mb-4 text-lg">Social globalization looks at how our daily lives and cultures are shared and
+                    influenced across the globe.</p>
+
+                <h3 class="text-xl font-semibold mb-3">How does it affect you?</h3>
+                <ul class="list-disc list-inside space-y-2 ml-4 text-lg text-slate-700 mb-6">
+                    <li>The <strong>media</strong> (communication networks that reach large amounts of people)
+                        influences our culture.</li>
+                    <li>We watch movies filmed in the United States, eat foods from around the world, and listen to
+                        international music.</li>
+                </ul>
+
+                <div class="mt-6 p-5 bg-amber-50 rounded-lg border border-amber-200">
+                    <h4 class="font-bold text-amber-800 text-lg mb-2">Connecting to Your Identity</h4>
+                    <p>Think about your <strong>individual identity</strong> (what makes you unique) and your
+                        <strong>collective identity</strong> (the groups you belong to). How many parts of your identity
+                        would be different if you had never seen a movie, heard music, or worn clothes created outside
+                        of your community?
+                    </p>
+                </div>
+            </div>
+
+            <!-- Political Tab -->
+            <div id="political" class="tab-content">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Political Globalization</h2>
+                <p class="mb-4 text-lg">Political globalization is evident in the number of international agreements
+                    that exist in the world today.</p>
+
+                <h3 class="text-xl font-semibold mb-3">Canada's Global Role:</h3>
+                <p class="mb-4 text-lg">Canada is part of several international groups that work together to make
+                    decisions. These include:</p>
+
+                <ul class="list-disc list-inside space-y-3 ml-4 text-lg text-slate-700">
+                    <li><strong>UN (United Nations):</strong> Representatives from different countries learn about one
+                        another and work together as a global society.</li>
+                    <li><strong>NAFTA (North American Free Trade Agreement):</strong> An agreement between Canada, the
+                        USA, and Mexico to reduce trade tariffs so trade can happen quickly.</li>
+                    <li><strong>NATO</strong> (a military alliance) and the <strong>G8</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quiz" class="tab-content">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Quick Check</h2>
+                <p class="mb-6 text-lg text-slate-600">Test your knowledge on the key vocabulary from Week 1. Click on
+                    the best answer!</p>
+
+                <!-- Question 1 -->
+                <div class="mb-8" id="q1-container">
+                    <p class="font-semibold text-lg mb-3">1. What do we call a company that operates in two or more
+                        countries?</p>
+                    <div class="space-y-2">
+                        <button onclick="checkAnswer(1, false, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">A)
+                            An infrastructure</button>
+                        <button onclick="checkAnswer(1, true, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">B)
+                            A transnational</button>
+                        <button onclick="checkAnswer(1, false, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">C)
+                            A consumer</button>
+                    </div>
+                    <p id="q1-feedback" class="mt-2 font-bold hidden"></p>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="mb-8" id="q2-container">
+                    <p class="font-semibold text-lg mb-3">2. Which dimension of globalization involves international
+                        agreements like NAFTA and the UN?</p>
+                    <div class="space-y-2">
+                        <button onclick="checkAnswer(2, false, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">A)
+                            Social Globalization</button>
+                        <button onclick="checkAnswer(2, false, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">B)
+                            Economic Globalization</button>
+                        <button onclick="checkAnswer(2, true, this)"
+                            class="w-full text-left p-3 rounded border border-slate-300 hover:bg-slate-50 transition-colors">C)
+                            Political Globalization</button>
+                    </div>
+                    <p id="q2-feedback" class="mt-2 font-bold hidden"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Tab switching logic
+        function openTab(evt, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active styling from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-white', 'border-b-2', 'border-blue-600', 'text-blue-700');
+                btn.classList.add('text-slate-600');
+            });
+
+            // Show selected tab and add active styling
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.remove('text-slate-600');
+            evt.currentTarget.classList.add('bg-white', 'border-b-2', 'border-blue-600', 'text-blue-700');
+        }
+
+        // Quiz logic
+        function checkAnswer(questionNum, isCorrect, btnElement) {
+            const container = document.getElementById(`q${questionNum}-container`);
+            const feedback = document.getElementById(`q${questionNum}-feedback`);
+            const buttons = container.querySelectorAll('button');
+
+            // Disable all buttons in this question
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            feedback.classList.remove('hidden');
+
+            if (isCorrect) {
+                btnElement.classList.replace('border-slate-300', 'border-green-500');
+                btnElement.classList.replace('hover:bg-slate-50', 'bg-green-100');
+                btnElement.classList.add('text-green-800');
+                feedback.textContent = "Correct! Great job.";
+                feedback.classList.add('text-green-600');
+            } else {
+                btnElement.classList.replace('border-slate-300', 'border-red-500');
+                btnElement.classList.replace('hover:bg-slate-50', 'bg-red-100');
+                btnElement.classList.add('text-red-800');
+                feedback.textContent = "Not quite! Review the notes and try again later.";
+                feedback.classList.add('text-red-600');
+            }
+        }
+    </script>
+</body>
+
+</html>

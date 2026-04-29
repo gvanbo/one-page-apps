@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social 10-2: Global Quest Jeopardy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;700&display=swap');
+
+        :root {
+            --jeopardy-blue: #060ce9;
+            --jeopardy-gold: #ffcc00;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        h1, h2, .category-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .jeopardy-card {
+            aspect-ratio: 4 / 3;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            height: 100%;
+            width: 100%;
+            background-color: var(--jeopardy-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #222;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--jeopardy-gold);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .card-inner:hover {
+            background-color: #080edb;
+            transform: scale(1.05);
+        }
+
+        .card-inner.used {
+            background-color: #333;
+            color: #666;
+            cursor: default;
+            transform: none;
+        }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+
+        .answer-text {
+            display: none;
+        }
+
+        .show-answer .answer-text {
+            display: block;
+        }
+
+        .show-answer .question-text {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-4xl md:text-6xl font-bold text-[#ffcc00] drop-shadow-lg">Global Quest</h1>
+        <p class="text-xl text-gray-300 mt-2 italic">Social 10-2 Unit 3 & 4 Review</p>
+    </header>
+
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-6 bg-blue-900/30 p-4 rounded-xl border border-blue-500/30">
+        <div class="flex gap-8 mb-4 md:mb-0">
+            <div class="text-center">
+                <p class="text-xs uppercase tracking-widest text-gray-400">Team 1 Score</p>
+                <p id="score1" class="text-3xl font-bold text-green-400">$0</p>
+                <div class="flex gap-2 mt-1">
+                    <button onclick="changeScore(1, -100)" class="bg-red-600 px-2 rounded">-</button>
+                    <button onclick="changeScore(1, 100)" class="bg-green-600 px-2 rounded">+</button>
+                </div>
+            </div>
+            <div class="text-center">
+                <p class="text-xs uppercase tracking-widest text-gray-400">Team 2 Score</p>
+                <p id="score2" class="text-3xl font-bold text-blue-400">$0</p>
+                <div class="flex gap-2 mt-1">
+                    <button onclick="changeScore(2, -100)" class="bg-red-600 px-2 rounded">-</button>
+                    <button onclick="changeScore(2, 100)" class="bg-green-600 px-2 rounded">+</button>
+                </div>
+            </div>
+        </div>
+        <button onclick="resetGame()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm transition">Reset Board</button>
+    </div>
+
+    <!-- Game Board -->
+    <main id="game-board" class="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 max-w-7xl mx-auto" aria-label="Jeopardy Game Board">
+        <!-- Categories and Cards will be injected here -->
+    </main>
+
+    <!-- Question Modal -->
+    <div id="modal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4" role="dialog" aria-modal="true">
+        <div class="bg-blue-800 border-4 border-[#ffcc00] w-full max-w-4xl p-8 rounded-2xl relative shadow-2xl text-center">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl" aria-label="Close">&times;</button>
+            
+            <div id="modal-content" class="min-h-[300px] flex flex-col justify-center">
+                <h2 id="modal-category" class="text-[#ffcc00] text-xl mb-4 tracking-tighter">CATEGORY</h2>
+                <div id="question-area" class="text-2xl md:text-4xl font-bold mb-8 transition-all duration-300">
+                    <p class="question-text"></p>
+                    <hr class="my-6 border-blue-400 opacity-30">
+                    <p class="answer-text text-green-400 italic font-normal"></p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button id="reveal-btn" onclick="revealAnswer()" class="bg-[#ffcc00] text-blue-900 font-bold py-3 px-8 rounded-full text-xl hover:bg-yellow-400 transition transform hover:scale-105">
+                        REVEAL ANSWER
+                    </button>
+                    <button onclick="closeModal()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl hover:bg-blue-500 transition">
+                        CONTINUE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameData = [
+            {
+                category: "Identity & Media",
+                questions: [
+                    { val: 100, q: "The process of social, economic, and political integration that connects the world.", a: "Globalization" },
+                    { val: 200, q: "A mix of different cultures within a society.", a: "Multiculturalism / Cultural Pluralism" },
+                    { val: 300, q: "When a minority group is forced or encouraged to adopt the customs of the dominant group.", a: "Assimilation" },
+                    { val: 400, q: "Media conglomerates owning multiple types of media outlets (TV, Radio, Print) to control content.", a: "Media Convergence" },
+                    { val: 500, q: "The blending of media and consumer goods to create a unified global culture (e.g., K-Pop popularity).", a: "Hybridization" }
+                ]
+            },
+            {
+                category: "Economics",
+                questions: [
+                    { val: 100, q: "A company that operates in more than one country.", a: "Transnational Corporation (TNC)" },
+                    { val: 200, q: "The primary goal of many TNCs, which involves hiring workers in developing countries for lower wages.", a: "Outsourcing" },
+                    { val: 300, q: "A system of trade where producers in developing countries get a higher price for their goods.", a: "Fair Trade" },
+                    { val: 400, q: "The international organization that sets rules for global trade and settles disputes.", a: "World Trade Organization (WTO)" },
+                    { val: 500, q: "The total value of goods and services produced in a country divided by its population.", a: "GDP per capita" }
+                ]
+            },
+            {
+                category: "Quality of Life",
+                questions: [
+                    { val: 100, q: "The measure of wealth and material comfort available to a person.", a: "Standard of Living" },
+                    { val: 200, q: "The 1948 document that outlines the basic rights and freedoms to which all human beings are entitled.", a: "Universal Declaration of Human Rights (UDHR)" },
+                    { val: 300, q: "A non-profit group that operates independently of any government, like Doctors Without Borders.", a: "Non-Governmental Organization (NGO)" },
+                    { val: 400, q: "A measure of the impact of human activities on the environment based on land and water use.", a: "Ecological Footprint" },
+                    { val: 500, q: "UN index that measures life expectancy, education, and income to rank countries.", a: "Human Development Index (HDI)" }
+                ]
+            },
+            {
+                category: "Sustainability",
+                questions: [
+                    { val: 100, q: "Development that meets current needs without compromising future generations.", a: "Sustainable Development" },
+                    { val: 200, q: "The gradual increase in the average temperature of Earth's atmosphere and oceans.", a: "Global Warming / Climate Change" },
+                    { val: 300, q: "The loss of trees on a massive scale, often to make room for agriculture or industry.", a: "Deforestation" },
+                    { val: 400, q: "An agreement between nations to limit greenhouse gas emissions (e.g., Paris Agreement).", a: "International Environmental Protocol" },
+                    { val: 500, q: "The ability of an ecosystem to maintain its functions and biodiversity over time.", a: "Ecological Integrity" }
+                ]
+            },
+            {
+                category: "Citizenship",
+                questions: [
+                    { val: 100, q: "Buying local or boycotting a company due to its ethics is an example of being a _______ consumer.", a: "Conscious / Ethical Consumer" },
+                    { val: 200, q: "To take part in a public demonstration to express disapproval of something.", a: "Protest / Activism" },
+                    { val: 300, q: "The set of rights and responsibilities that a person has within the global community.", a: "Global Citizenship" },
+                    { val: 400, q: "A person who is forced to leave their country to escape war, persecution, or natural disaster.", a: "Refugee" },
+                    { val: 500, q: "The principle that suggests humans must care for the earth as its temporary guardians.", a: "Stewardship" }
+                ]
+            }
+        ];
+
+        let scores = { 1: 0, 2: 0 };
+
+        function initBoard() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+
+            // Create Category Headers
+            gameData.forEach(cat => {
+                const header = document.createElement('div');
+                header.className = 'bg-blue-900 border-2 border-blue-700 p-2 md:p-4 text-center rounded-t-lg';
+                header.innerHTML = `<span class="category-title text-sm md:text-xl font-bold text-white">${cat.category}</span>`;
+                board.appendChild(header);
+            });
+
+            // Create Rows of Points
+            for (let i = 0; i < 5; i++) {
+                gameData.forEach((cat, catIdx) => {
+                    const qData = cat.questions[i];
+                    const card = document.createElement('div');
+                    card.className = 'jeopardy-card';
+                    card.innerHTML = `
+                        <div id="card-${catIdx}-${i}" 
+                             class="card-inner" 
+                             role="button" 
+                             aria-label="${cat.category} for ${qData.val}"
+                             onclick="openQuestion(${catIdx}, ${i})">
+                            $${qData.val}
+                        </div>
+                    `;
+                    board.appendChild(card);
+                });
+            }
+        }
+
+        function openQuestion(catIdx, qIdx) {
+            const card = document.getElementById(`card-${catIdx}-${qIdx}`);
+            if (card.classList.contains('used')) return;
+
+            const qData = gameData[catIdx].questions[qIdx];
+            const modal = document.getElementById('modal');
+            const questionArea = document.querySelector('.question-text');
+            const answerArea = document.querySelector('.answer-text');
+            const categoryLabel = document.getElementById('modal-category');
+
+            categoryLabel.innerText = gameData[catIdx].category + " - $" + qData.val;
+            questionArea.innerText = qData.q;
+            answerArea.innerText = "Answer: " + qData.a;
+
+            modal.classList.remove('hidden');
+            document.getElementById('modal-content').classList.remove('show-answer');
+            
+            // Mark as used
+            card.classList.add('used');
+            card.innerHTML = "";
+        }
+
+        function revealAnswer() {
+            document.getElementById('modal-content').classList.add('show-answer');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function changeScore(team, amount) {
+            scores[team] += amount;
+            document.getElementById(`score${team}`).innerText = `$${scores[team]}`;
+            if (scores[team] < 0) {
+                document.getElementById(`score${team}`).classList.add('text-red-500');
+            } else {
+                document.getElementById(`score${team}`).classList.remove('text-red-500');
+            }
+        }
+
+        function resetGame() {
+            if (confirm("Reset the entire board?")) {
+                scores = { 1: 0, 2: 0 };
+                document.getElementById('score1').innerText = "$0";
+                document.getElementById('score2').innerText = "$0";
+                initBoard();
+            }
+        }
+
+        window.onload = initBoard;
+    </script>
+</body>
+</html>

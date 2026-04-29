@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NorthStar Academy Learning Continuum</title>
+    <!-- Lexend Font from NSA Style Guide -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --federal-blue: #151859;
+            --yellow: #e6a51c;
+            --whitesmoke: #f5f5f5;
+            --teal: #3e87e6;
+            --red: #ef121b;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--whitesmoke);
+            color: var(--federal-blue);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* The Continuum Line */
+        .continuum-track {
+            position: relative;
+            height: 12px;
+            width: 100%;
+            background: linear-gradient(to right, #151859, #ef121b);
+            border-radius: 6px;
+            margin: 100px 0 60px 0;
+            cursor: pointer;
+        }
+
+        /* The Draggable Logo */
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-image: url('https://nsaschool.ca/hubfs/NSA%20Logo%20Mark.png');
+            /* Fallback to a known NSA asset if local upload isn't accessible */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: white;
+            border: 3px solid var(--federal-blue);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease-out, box-shadow 0.2s;
+            z-index: 10;
+            touch-action: none;
+        }
+
+        /* Use the actual uploaded image if possible via img tag for better control */
+        .slider-handle img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .slider-handle:active {
+            box-shadow: 0 0 15px var(--federal-blue);
+            cursor: grabbing;
+        }
+
+        /* Labels and Icons */
+        .labels-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: -160px;
+            margin-bottom: 80px;
+        }
+
+        .label-group {
+            width: 200px;
+        }
+
+        .label-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .label-list {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .clock-icon {
+            font-size: 3rem;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .no-clock {
+            position: relative;
+        }
+
+        .no-clock::after {
+            content: '❌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: rgba(239, 18, 27, 0.7);
+        }
+
+        /* Revealed Content */
+        #reveal-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            text-align: left;
+            border-top: 2px solid #eee;
+            padding-top: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #reveal-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nsa-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nsa-details {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .nsa-details li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .nsa-details li::before {
+            content: '•';
+            color: var(--yellow);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            font-size: 1.5rem;
+            vertical-align: middle;
+        }
+
+        .instruction {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .success-pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                border-color: var(--federal-blue);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                border-color: var(--yellow);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                border-color: var(--federal-blue);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-2xl mb-2 font-bold">The Learning Continuum</h2>
+        <p class="instruction">Slide the NorthStar Academy logo to where you think we fit!</p>
+
+        <div class="labels-container">
+            <div class="label-group text-left">
+                <div class="label-title">Synchronous Learning</div>
+                <ul class="label-list">
+                    <li>Scheduled</li>
+                    <li>Realtime</li>
+                </ul>
+                <div class="clock-icon">🕒</div>
+            </div>
+
+            <div class="label-group text-right">
+                <div class="label-title">Asynchronous Learning</div>
+                <ul class="label-list">
+                    <li>Flexible</li>
+                    <li>Self Paced</li>
+                </ul>
+                <div class="clock-icon no-clock">🕒</div>
+            </div>
+        </div>
+
+        <div class="continuum-track" id="track">
+            <div class="slider-handle" id="handle">
+                <!-- Using placeholder but logic is set to use uploaded assets if environment allows -->
+                <img src="https://nsaschool.ca/hubfs/NSA-Circle-Logo-Small.png" alt="NSA Logo"
+                    onerror="this.src='https://via.placeholder.com/80?text=NSA'">
+            </div>
+        </div>
+
+        <div id="reveal-content">
+            <div class="nsa-title">NorthStar Academy</div>
+            <ul class="nsa-details">
+                <li>Courses have firm start and end dates</li>
+                <li>Suggested completion roadmaps for each course</li>
+                <li>Certified Christian teachers providing instruction and support</li>
+                <li>Structured program using the Moodle platform</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const handle = document.getElementById('handle');
+        const track = document.getElementById('track');
+        const revealContent = document.getElementById('reveal-content');
+
+        let isDragging = false;
+        const targetPercentage = 75; // The "Sweet Spot" from your graphic
+        const tolerance = 5; // How close they need to get
+        let hasWon = false;
+
+        function updateSlider(e) {
+            if (!isDragging && e.type !== 'click') return;
+
+            const rect = track.getBoundingClientRect();
+            let x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            let percentage = (x / rect.width) * 100;
+
+            // Constrain
+            percentage = Math.max(0, Math.min(percentage, 100));
+
+            handle.style.left = percentage + '%';
+
+            // Check if correct
+            if (Math.abs(percentage - targetPercentage) < tolerance) {
+                success();
+            }
+        }
+
+        function success() {
+            if (hasWon) return;
+            hasWon = true;
+
+            // Lock it in place
+            handle.style.left = targetPercentage + '%';
+            handle.classList.add('success-pulse');
+
+            // Show content
+            revealContent.classList.add('visible');
+
+            // Update instruction
+            document.querySelector('.instruction').innerText =
+                "Spot on! NorthStar Academy offers the best of both worlds.";
+            document.querySelector('.instruction').style.color = 'var(--yellow)';
+            document.querySelector('.instruction').style.fontWeight = 'bold';
+        }
+
+        // Mouse Events
+        handle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', updateSlider);
+
+        // Touch Events
+        handle.addEventListener('touchstart', () => isDragging = true);
+        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('touchmove', (e) => {
+            updateSlider(e);
+            e.preventDefault(); // Prevent scrolling while dragging
+        }, {
+            passive: false
+        });
+
+        // Click track to jump
+        track.addEventListener('click', updateSlider);
+    </script>
+</body>
+
+</html>

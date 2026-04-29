@@ -20,6 +20,24 @@ Use the custom workspace agent `documentation-accuracy-guardian` to keep docs al
 2. Ask for a documentation audit and sync.
 3. The agent verifies `app.js` documentation fields, checks file references, and updates `README.md`/`app.js` as needed.
 
+## NSA Workspace Onboarding
+
+This repository is now mapped as a first-class workspace repo for AI-generated course apps.
+
+- Primary role: app gallery + import automation for course-linked one-page tools.
+- Context file: `AGENT_CONTEXT.md`
+- Agent files: `.github/agents/gemini-app-importer.agent.md`, `.github/agents/documentation-accuracy-guardian.agent.md`
+
+### Two-Way Context Handoff
+
+- Inbound context:
+  - Course requirements from `nsa-content-general` and `nsa-pbr`
+  - Generated app HTML/assets from AI tools
+- Outbound context:
+  - Brand/style alignment to `nsa-design-system`
+  - Curriculum placement/linking updates to `nsa-content-general` and `nsa-pbr`
+  - Workspace mapping updates to `nsa-tools`
+
 ## Structure
 
 - `index.html`: Gallery homepage

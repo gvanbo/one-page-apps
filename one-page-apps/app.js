@@ -12,18 +12,24 @@ const appCatalog = [
 
 const projectDocumentation = {
   status: {
-    phase: "Gallery infrastructure active",
+    phase: "Workspace onboarded with two-way context",
     summary:
-      "Homepage catalog, import workflow guidance, and both custom agents (import + documentation audit) are in place.",
-    lastUpdated: "2026-03-14",
+      "Gallery infrastructure is active, one-page-apps is now mapped in the NSA workspace, and custom agents include cross-repo inbound/outbound routing guidance.",
+    lastUpdated: "2026-04-29",
   },
   changes: [
     "Created gallery homepage with dynamic app cards and launch links.",
     "Added standardized Gemini pre-prompt template for quality and CSS consistency.",
     "Added custom workspace agent for app import automation.",
     "Added documentation audit agent and update-status checklist workflow.",
+    "Added AGENT_CONTEXT.md and two-way workspace handoff guidance for one-page-app agents.",
   ],
   references: [
+    {
+      label: "Repository Agent Context",
+      path: "./AGENT_CONTEXT.md",
+      note: "Defines purpose, constraints, and two-way cross-repo routing.",
+    },
     {
       label: "Importer Agent",
       path: "./.github/agents/gemini-app-importer.agent.md",

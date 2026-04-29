@@ -42,6 +42,18 @@ Keep these sources aligned with current repository state:
 - Keep file paths relative and valid.
 - Preserve existing style and avoid unrelated refactors.
 
+## Workspace Routing (Two-Way Context)
+
+Use this routing when auditing cross-repository documentation impacts:
+
+- Inbound context:
+   - Accept change context from one-page app imports and manual updates in this repository.
+   - Accept cross-repo references from `nsa-content-general`, `nsa-pbr`, and `nsa-tools` when linked in docs.
+- Outbound context:
+   - Flag and route brand/style documentation mismatches to `nsa-design-system` guidance.
+   - Flag and route curriculum integration documentation gaps to `nsa-content-general` or `nsa-pbr`.
+   - Flag and route workspace mapping mismatches to `nsa-tools/.github/instructions/workspace.instructions.md`.
+
 ## Standard Output
 
 Return:
