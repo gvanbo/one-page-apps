@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Global Manager: Unit 3 Challenge</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 
+    Chosen Palette: Slate (Neutrals) with Emerald (Prosperity) and Sky Blue (Sustainability/Ethics) accents.
+    
+    Application Structure Plan: Designed as an interactive "Executive Dashboard" simulation. The linear flow (Intro -> Scenes -> Results) is optimized for study-retrieval. 
+    New Information Architecture:
+    1. Introduction: Establishes the Prosperity vs. Sustainability tension.
+    2. Interactive Simulation: Expanded to 6 scenes covering Ch 11-15.
+    3. Study Insights: Post-decision logic that anchors gameplay to Unit 3 test concepts.
+    4. Results: Cumulative evaluation of the student's management style.
+    
+    Visualization & Content Choices: 
+    - Source Info: Unit 3 curriculum (Bretton Woods, TNCs, Knowledge Economy, Resource Development).
+    - Goal: Inform, Compare, and synthesize complex economic/environmental trade-offs.
+    - Viz/Presentation: Dynamic Bar Chart via Chart.js for live tracking.
+    - Interaction: Branching-style buttons and revealable study "tooltips" in the feedback section.
+    - Justification: Hands-on decision making is more effective than rote memorization for 10-2 learners.
+    
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals use Canvas, HTML elements, and Unicode.
+    -->
+
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 25vh; 
+            min-height: 220px;
+            max-height: 300px;
+            padding: 1rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .study-insight-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased">
+
+    <main class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+        
+        <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[85vh]">
+            
+            <header class="bg-slate-800 text-white p-6 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">The Global Manager 🌐</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm uppercase tracking-widest font-semibold mt-1">Unit 3 Exam Prep: Prosperity & Sustainability</p>
+                </div>
+                <div class="text-3xl opacity-50">📑</div>
+            </header>
+
+            <!-- Introduction Screen -->
+            <section id="intro-screen" class="flex-grow p-6 sm:p-10 flex flex-col justify-center fade-in">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-6 text-center">Are you ready for the Unit 3 Test?</h2>
+                    <div class="prose max-w-none text-slate-600 space-y-6">
+                        <p class="text-lg leading-relaxed">This simulation puts you in charge of a <strong>Transnational Corporation (TNC)</strong>. To pass Unit 3, you must understand how international agreements, technology, and resource development affect the world.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                            <div>
+                                <h4 class="font-bold text-emerald-700 flex items-center">📈 Prosperity Score</h4>
+                                <p class="text-sm">Measures money, jobs, and "Economic Globalization." (Ch 11-13)</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sky-700 flex items-center">🌍 Sustainability Score</h4>
+                                <p class="text-sm">Measures "Stewardship" and the "Environment." (Ch 14-15)</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-center font-medium">Your goal: Reach the end with scores as balanced as possible.</p>
+                    </div>
+                    <div class="mt-10 text-center">
+                        <button onclick="startSimulation()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all transform hover:scale-105 active:scale-95 text-xl">
+                            Accept the CEO Position 👔
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Simulation Screen -->
+            <section id="simulation-screen" class="flex-grow flex flex-col hidden fade-in">
+                
+                <!-- Live Chart Dashboard -->
+                <div class="bg-slate-50 border-b border-slate-200">
+                    <div class="chart-container">
+                        <canvas id="scoreChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Scenario Content -->
+                <div class="p-6 sm:p-10 flex-grow">
+                    <div class="mb-4 flex items-center justify-between">
+                        <span id="scene-topic" class="text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full border border-indigo-200">Topic</span>
+                        <span id="scene-counter" class="text-sm font-bold text-slate-400">Step 1 / 6</span>
+                    </div>
+                    
+                    <h2 id="scene-title" class="text-2xl font-bold text-slate-800 mb-3">Scene Title</h2>
+                    <p id="scene-context" class="text-lg text-slate-600 mb-8 leading-relaxed">Scenario details go here...</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" id="options-container">
+                        <button id="btn-option-a" onclick="makeDecision(0)" class="text-left p-6 rounded-xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all group">
+                            <h4 id="option-a-label" class="font-bold text-lg text-slate-800 mb-2">Option A</h4>
+                            <p id="option-a-desc" class="text-slate-500 text-sm italic">Details...</p>
+                        </button>
+
+                        <button id="btn-option-b" onclick="makeDecision(1)" class="text-left p-6 rounded-xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all group">
+                            <h4 id="option-b-label" class="font-bold text-lg text-slate-800 mb-2">Option B</h4>
+                            <p id="option-b-desc" class="text-slate-500 text-sm italic">Details...</p>
+                        </button>
+                    </div>
+
+                    <!-- Feedback & Study Helpers -->
+                    <div id="feedback-area" class="hidden fade-in space-y-4">
+                        <div class="bg-slate-800 text-white rounded-xl p-6 shadow-lg">
+                            <p id="feedback-text" class="text-base leading-relaxed">Consequence text...</p>
+                        </div>
+                        
+                        <!-- Study Helper Tooltip Box -->
+                        <div class="study-insight-box p-5 rounded-xl">
+                            <h5 class="text-sky-800 font-bold text-xs uppercase tracking-widest flex items-center mb-2">
+                                💡 Unit 3 Study Insight
+                            </h5>
+                            <p id="study-insight-text" class="text-sky-900 text-sm italic">Connection to curriculum goes here...</p>
+                        </div>
+
+                        <div class="pt-4 flex justify-center">
+                            <button onclick="nextScene()" class="bg-slate-900 text-white hover:bg-black font-black py-3 px-8 rounded-lg shadow-md transition-all flex items-center">
+                                Proceed to Next Phase <span class="ml-2">➡️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Screen -->
+            <section id="results-screen" class="flex-grow p-6 sm:p-10 flex flex-col items-center justify-center hidden fade-in bg-slate-50">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-black text-slate-900 mb-2">Unit 3 Performance Review</h2>
+                    <p class="text-slate-500">Based on your decisions regarding the global economy and environment.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-2xl border-t-8 border-indigo-600 relative">
+                    <div class="text-7xl mb-6" id="result-icon">📊</div>
+                    <h3 id="result-title" class="text-2xl font-black text-slate-800 mb-4 uppercase tracking-tight">Status</h3>
+                    <p id="result-desc" class="text-lg text-slate-600 p-6 rounded-2xl bg-indigo-50 border border-indigo-100 mb-8 font-medium">
+                        Evaluation...
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-6 text-left">
+                        <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-200">
+                            <span class="block text-emerald-800 font-black text-xs uppercase tracking-widest mb-1">Economy</span>
+                            <span id="final-p-score" class="text-4xl font-black text-emerald-600">0</span>
+                        </div>
+                        <div class="bg-sky-50 p-5 rounded-2xl border border-sky-200">
+                            <span class="block text-sky-800 font-black text-xs uppercase tracking-widest mb-1">Planet</span>
+                            <span id="final-s-score" class="text-4xl font-black text-sky-600">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 flex flex-col items-center space-y-4">
+                    <p class="text-slate-400 text-sm">Review your Chapter 11-15 worksheets before the exam!</p>
+                    <button onclick="resetSimulation()" class="text-indigo-600 font-bold hover:text-indigo-800 underline decoration-2 underline-offset-8">
+                        Try a Different Strategy 🔄
+                    </button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // --- Data Storage: Expanded Unit 3 Study Content ---
+        const scenarioData = [
+            {
+                title: "The New Factory Hub",
+                topic: "Ch 12: Trade Liberalization",
+                context: "You need to build a massive parts factory. The board wants the highest growth possible.",
+                options: [
+                    {
+                        label: "Build in Alberta",
+                        desc: "Follow strict environmental laws and pay high Canadian wages.",
+                        p_impact: 5, s_impact: 10,
+                        feedback: "You supported the local economy and acted as a responsible steward, but higher costs slowed your expansion.",
+                        study: "Remember: 'Stewardship' means responsible management of land. Building locally supports the infrastructure of your own province."
+                    },
+                    {
+                        label: "Outsource to a Maquiladora",
+                        desc: "Lower wages and less strict rules in Mexico.",
+                        p_impact: 15, s_impact: -10,
+                        feedback: "Profits are soaring! However, critics are pointing to your company's growing 'Ecological Footprint' and lower environmental standards.",
+                        study: "Keyword: 'Outsource.' TNCs often move jobs to 'Maquiladoras' to take advantage of lower costs, which is a major part of Economic Globalization."
+                    }
+                ]
+            },
+            {
+                title: "The Financial Referee",
+                topic: "Ch 11: Global Institutions",
+                context: "One of your host countries is in a debt crisis. They want a loan from the IMF (International Monetary Fund).",
+                options: [
+                    {
+                        label: "Advocate for Privatization",
+                        desc: "The IMF requires the country to sell state-owned businesses to TNCs like yours.",
+                        p_impact: 12, s_impact: -8,
+                        feedback: "Your company buys up local utilities for a profit. However, locals lose access to affordable services.",
+                        study: "Study Tip: 'Privatization' is when government-owned businesses are sold to private companies. It's often an IMF requirement for loans (Ch 11)."
+                    },
+                    {
+                        label: "Support Grassroots Loans",
+                        desc: "Give smaller loans directly to local entrepreneurs instead.",
+                        p_impact: -5, s_impact: 15,
+                        feedback: "Community quality of life improves significantly. You didn't make a profit, but you 'Empowered' the local population.",
+                        study: "Term to know: 'Empower' means giving people authority or confidence. Grassroots organizations work locally rather than through big TNCs."
+                    }
+                ]
+            },
+            {
+                title: "The Talent Search",
+                topic: "Ch 13: Knowledge Economy",
+                context: "Your headquarters needs 500 expert computer programmers to develop a new app.",
+                options: [
+                    {
+                        label: "Hire Global Programmers in India",
+                        desc: "Hire highly skilled professionals for $12/hour.",
+                        p_impact: 15, s_impact: -5,
+                        feedback: "You are thriving in the Knowledge Economy! But back home, North American professionals are losing jobs to global competition.",
+                        study: "Connection: The 'Knowledge Economy' is driven by information and skills rather than labor and capital. This shift is a core part of contemporary globalization."
+                    },
+                    {
+                        label: "Invest in Local Training",
+                        desc: "Hire local graduates at $50/hour and pay for their specialized training.",
+                        p_impact: -5, s_impact: 12,
+                        feedback: "You've created a loyal, highly skilled local workforce. It's expensive, but it improves your company's long-term sustainability.",
+                        study: "Fact: In the knowledge economy, 'Factors of Production' have shifted from land/labor to knowledge/technology. This creates both opportunities and challenges."
+                    }
+                ]
+            },
+            {
+                title: "The Energy Dilemma",
+                topic: "Ch 14: Resource Development",
+                context: "Your factory needs power. Alberta's oil sands offer a massive source of energy.",
+                options: [
+                    {
+                        label: "Demand Reclaimed Energy",
+                        desc: "Only buy power from projects that restore the forest after surface mining.",
+                        p_impact: 4, s_impact: 10,
+                        feedback: "You are balancing prosperity with the boreal forest. This is the essence of 'Sustainable Development.'",
+                        study: "Definition: 'Reclaimed' means restoring land to a productive state after resource extraction, like in the Alberta oil sands."
+                    },
+                    {
+                        label: "Prioritize Low Cost",
+                        desc: "Buy energy from the cheapest source, regardless of its impact on the peatlands.",
+                        p_impact: 15, s_impact: -12,
+                        feedback: "Your costs are low, but the environmental 'Implication' is high. You have ignored the needs of future generations.",
+                        study: "Implication: Surface mining and clear-cutting have major environmental impacts. Ignoring them often increases short-term profit but ruins long-term stability."
+                    }
+                ]
+            },
+            {
+                title: "The Product Icon",
+                topic: "Ch 14: Consumerism",
+                context: "Your marketing team wants high-gloss, triple-layered plastic packaging to make your product a global 'Icon.'",
+                options: [
+                    {
+                        label: "Go for the Icon Status",
+                        desc: "It looks amazing in advertisements and increases consumerism.",
+                        p_impact: 14, s_impact: -10,
+                        feedback: "Sales are at an all-time high! But your plastic waste is contributing to a global environmental crisis.",
+                        study: "Concept: 'Consumerism' is a preoccupation with buying goods. An 'Icon' is a person or image known to millions—like your product's new look."
+                    },
+                    {
+                        label: "Use Minimal Reclaimed Material",
+                        desc: "Simple, recyclable cardboard. Less 'flashy' but environmentally friendly.",
+                        p_impact: 2, s_impact: 15,
+                        feedback: "Eco-conscious shoppers love you. Your company is now seen as a leader in 'Ecological Ethics.'",
+                        study: "Key Term: 'Ecological Ethics' means thinking about the environment from the planet's point of view, not just for human use."
+                    }
+                ]
+            },
+            {
+                title: "The Labor Scandal",
+                topic: "Ch 13/15: Human Stewardship",
+                context: "An NGO reports that your sub-contractor is running a 'sweatshop' to save you money.",
+                options: [
+                    {
+                        label: "Implement Mandatory Inspections",
+                        desc: "Follow the ILO (International Labour Org) rules and pay for regular audits.",
+                        p_impact: -8, s_impact: 18,
+                        feedback: "Your costs rise, but you ensure the 'Quality of Life' for your workers is high and fair.",
+                        study: "Fact check: The ILO (International Labour Organization) works to ban dangerous practices like child labor in mines and factories."
+                    },
+                    {
+                        label: "Deny and Continue",
+                        desc: "Blame the sub-contractor. The low prices keep your 'GNP' contributions high.",
+                        p_impact: 10, s_impact: -20,
+                        feedback: "A massive boycott starts. You realize that 'Sustainable Prosperity' cannot exist without social justice.",
+                        study: "Warning: 'Sweatshops' are a major negative of globalization. A 'Boycott' is an organized consumer campaign to stop buying from unethical companies."
+                    }
+                ]
+            }
+        ];
+
+        // --- State Management ---
+        let currentSceneIndex = 0;
+        let prosperityScore = 50; 
+        let sustainabilityScore = 50;
+        let dashboardChart = null;
+
+        // --- Chart initialization ---
+        function initChart() {
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            dashboardChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['PROSPERITY (Economy)', 'PLANET (Sustainability)'],
+                    datasets: [{
+                        data: [prosperityScore, sustainabilityScore],
+                        backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(14, 165, 233, 0.7)'],
+                        borderColor: ['#059669', '#0369a1'],
+                        borderWidth: 2,
+                        borderRadius: 12
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { min: 0, max: 150, grid: { display: false }, ticks: { display: false } },
+                        y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 14 } } }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            dashboardChart.data.datasets[0].data = [prosperityScore, sustainabilityScore];
+            dashboardChart.update();
+        }
+
+        // --- Game Controls ---
+        function startSimulation() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('simulation-screen').classList.remove('hidden');
+            if(!dashboardChart) initChart();
+            loadScene(0);
+        }
+
+        function loadScene(idx) {
+            const scene = scenarioData[idx];
+            document.getElementById('feedback-area').classList.add('hidden');
+            document.getElementById('options-container').classList.remove('hidden');
+            
+            document.getElementById('scene-counter').textContent = `Step ${idx + 1} / ${scenarioData.length}`;
+            document.getElementById('scene-topic').textContent = scene.topic;
+            document.getElementById('scene-title').textContent = scene.title;
+            document.getElementById('scene-context').textContent = scene.context;
+            
+            document.getElementById('option-a-label').textContent = scene.options[0].label;
+            document.getElementById('option-a-desc').textContent = scene.options[0].desc;
+            document.getElementById('option-b-label').textContent = scene.options[1].label;
+            document.getElementById('option-b-desc').textContent = scene.options[1].desc;
+            
+            document.getElementById('btn-option-a').disabled = false;
+            document.getElementById('btn-option-b').disabled = false;
+        }
+
+        function makeDecision(optIdx) {
+            const scene = scenarioData[currentSceneIndex];
+            const choice = scene.options[optIdx];
+            
+            prosperityScore += choice.p_impact;
+            sustainabilityScore += choice.s_impact;
+            updateChart();
+            
+            document.getElementById('options-container').classList.add('hidden');
+            document.getElementById('feedback-text').innerHTML = `<strong>Outcome:</strong> ${choice.feedback}`;
+            document.getElementById('study-insight-text').textContent = choice.study;
+            document.getElementById('feedback-area').classList.remove('hidden');
+            
+            document.getElementById('btn-option-a').disabled = true;
+            document.getElementById('btn-option-b').disabled = true;
+        }
+
+        function nextScene() {
+            currentSceneIndex++;
+            if(currentSceneIndex < scenarioData.length) {
+                loadScene(currentSceneIndex);
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('simulation-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            
+            const icon = document.getElementById('result-icon');
+            const title = document.getElementById('result-title');
+            const desc = document.getElementById('result-desc');
+            
+            document.getElementById('final-p-score').textContent = prosperityScore;
+            document.getElementById('final-s-score').textContent = sustainabilityScore;
+
+            if(Math.abs(prosperityScore - sustainabilityScore) < 15) {
+                icon.textContent = "⚖️";
+                title.textContent = "Sustainable Leader";
+                desc.textContent = "You successfully balanced economic growth with environmental ethics. This 'Sustainable Prosperity' is the key focus of Unit 3!";
+            } else if (prosperityScore > sustainabilityScore) {
+                icon.textContent = "📈";
+                title.textContent = "Profit-First Executive";
+                desc.textContent = "You maximized GNP and corporate growth, but ignored the environmental 'Implications.' Watch out—this path risks long-term stability.";
+            } else {
+                icon.textContent = "🌱";
+                title.textContent = "Conscious Stewardship";
+                desc.textContent = "You prioritized 'Stewardship' and worker rights. While growth was slower, your legacy protects the planet for future generations.";
+            }
+        }
+
+        function resetSimulation() {
+            currentSceneIndex = 0;
+            prosperityScore = 50;
+            sustainabilityScore = 50;
+            document.getElementById('results-screen').classList.add('hidden');
+            startSimulation();
+        }
+    </script>
+</body>
+</html>
