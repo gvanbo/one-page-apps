@@ -1,0 +1,25 @@
+# Node artifacts
+node_modules/
+npm-debug.log*
+package-lock.json
+yarn.lock
+
+# Build outputs for one-page-apps (ignore generated bundles and maps)
+apps/*/dist/app.js
+apps/*/dist/app.js.map
+apps/*/dist/*.zip
+apps/*/dist/node_modules/
+apps/*/dist/package-lock.json
+
+# IDE / OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local

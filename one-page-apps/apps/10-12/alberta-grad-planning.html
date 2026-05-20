@@ -1,0 +1,1781 @@
+import React, { useState, useMemo, useEffect } from 'react';
+
+// Custom default presets for student starting points
+const STEM_PRESET = [
+// Grade 10
+{ id: '1', name: 'English Language Arts 10-1', gradeLevel: 10, credits: 5, mark: 85, category: 'English', is30Level:
+false, isExternal: false },
+{ id: '2', name: 'Social Studies 10-1', gradeLevel: 10, credits: 5, mark: 82, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: '3', name: 'Mathematics 10C', gradeLevel: 10, credits: 5, mark: 88, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: '4', name: 'Science 10', gradeLevel: 10, credits: 5, mark: 90, category: 'Science', is30Level: false, isExternal:
+false },
+{ id: '5', name: 'Physical Education 10', gradeLevel: 10, credits: 3, mark: 95, category: 'PE', is30Level: false,
+isExternal: false },
+{ id: '6', name: 'Career and Life Management (CALM)', gradeLevel: 10, credits: 3, mark: 88, category: 'CALM', is30Level:
+false, isExternal: false },
+{ id: '7', name: 'French 10', gradeLevel: 10, credits: 5, mark: 78, category: 'Option', is30Level: false, isExternal:
+false },
+{ id: '8', name: 'Intro to Computing Science', gradeLevel: 10, credits: 3, mark: 92, category: 'Option', is30Level:
+false, isExternal: false },
+
+// Grade 11
+{ id: '9', name: 'English Language Arts 20-1', gradeLevel: 11, credits: 5, mark: 84, category: 'English', is30Level:
+false, isExternal: false },
+{ id: '10', name: 'Social Studies 20-1', gradeLevel: 11, credits: 5, mark: 80, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: '11', name: 'Mathematics 20-1', gradeLevel: 11, credits: 5, mark: 86, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: '12', name: 'Chemistry 20', gradeLevel: 11, credits: 5, mark: 85, category: 'Science', is30Level: false,
+isExternal: false },
+{ id: '13', name: 'Physics 20', gradeLevel: 11, credits: 5, mark: 87, category: 'Science', is30Level: false, isExternal:
+false },
+{ id: '14', name: 'Art 20', gradeLevel: 11, credits: 5, mark: 88, category: 'Option', is30Level: false, isExternal:
+false },
+{ id: '15', name: 'Physical Education 20', gradeLevel: 11, credits: 5, mark: 92, category: 'Option', is30Level: false,
+isExternal: false },
+
+// Grade 12
+{ id: '16', name: 'English Language Arts 30-1', gradeLevel: 12, credits: 5, mark: 82, category: 'English', is30Level:
+true, isExternal: false },
+{ id: '17', name: 'Social Studies 30-1', gradeLevel: 12, credits: 5, mark: 81, category: 'Social Studies', is30Level:
+true, isExternal: false },
+{ id: '18', name: 'Mathematics 30-1', gradeLevel: 12, credits: 5, mark: 88, category: 'Mathematics', is30Level: true,
+isExternal: false },
+{ id: '19', name: 'Mathematics 31 (Calculus)', gradeLevel: 12, credits: 5, mark: 85, category: 'Mathematics', is30Level:
+true, isExternal: false },
+{ id: '20', name: 'Chemistry 30', gradeLevel: 12, credits: 5, mark: 86, category: 'Science', is30Level: true,
+isExternal: false },
+{ id: '21', name: 'Physics 30', gradeLevel: 12, credits: 5, mark: 88, category: 'Science', is30Level: true, isExternal:
+false }
+];
+
+const LIBERAL_PRESET = [
+// Grade 10
+{ id: 'l1', name: 'English Language Arts 10-1', gradeLevel: 10, credits: 5, mark: 88, category: 'English', is30Level:
+false, isExternal: false },
+{ id: 'l2', name: 'Social Studies 10-1', gradeLevel: 10, credits: 5, mark: 85, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: 'l3', name: 'Mathematics 10C', gradeLevel: 10, credits: 5, mark: 72, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: 'l4', name: 'Science 10', gradeLevel: 10, credits: 5, mark: 76, category: 'Science', is30Level: false, isExternal:
+false },
+{ id: 'l5', name: 'Physical Education 10', gradeLevel: 10, credits: 5, mark: 90, category: 'PE', is30Level: false,
+isExternal: false },
+{ id: 'l6', name: 'Career and Life Management (CALM)', gradeLevel: 10, credits: 3, mark: 85, category: 'CALM',
+is30Level: false, isExternal: false },
+{ id: 'l7', name: 'Art 10', gradeLevel: 10, credits: 5, mark: 92, category: 'Option', is30Level: false, isExternal:
+false },
+{ id: 'l8', name: 'Drama 10', gradeLevel: 10, credits: 5, mark: 94, category: 'Option', is30Level: false, isExternal:
+false },
+
+// Grade 11
+{ id: 'l9', name: 'English Language Arts 20-1', gradeLevel: 11, credits: 5, mark: 86, category: 'English', is30Level:
+false, isExternal: false },
+{ id: 'l10', name: 'Social Studies 20-1', gradeLevel: 11, credits: 5, mark: 89, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: 'l11', name: 'Mathematics 20-2', gradeLevel: 11, credits: 5, mark: 74, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: 'l12', name: 'Biology 20', gradeLevel: 11, credits: 5, mark: 82, category: 'Science', is30Level: false,
+isExternal: false },
+{ id: 'l13', name: 'Spanish 20', gradeLevel: 11, credits: 5, mark: 80, category: 'Option', is30Level: false, isExternal:
+false },
+{ id: 'l14', name: 'Art 20', gradeLevel: 11, credits: 5, mark: 95, category: 'Option', is30Level: false, isExternal:
+false },
+{ id: 'l15', name: 'Work Experience 15', gradeLevel: 11, credits: 5, mark: 90, category: 'Option', is30Level: false,
+isExternal: true },
+
+// Grade 12
+{ id: 'l16', name: 'English Language Arts 30-1', gradeLevel: 12, credits: 5, mark: 85, category: 'English', is30Level:
+true, isExternal: false },
+{ id: 'l17', name: 'Social Studies 30-1', gradeLevel: 12, credits: 5, mark: 88, category: 'Social Studies', is30Level:
+true, isExternal: false },
+{ id: 'l18', name: 'Mathematics 30-2', gradeLevel: 12, credits: 5, mark: 75, category: 'Mathematics', is30Level: true,
+isExternal: false },
+{ id: 'l19', name: 'Biology 30', gradeLevel: 12, credits: 5, mark: 84, category: 'Science', is30Level: true, isExternal:
+false },
+{ id: 'l20', name: 'Art 30', gradeLevel: 12, credits: 5, mark: 96, category: 'Option', is30Level: true, isExternal:
+false },
+{ id: 'l21', name: 'Spanish 30', gradeLevel: 12, credits: 5, mark: 85, category: 'Option', is30Level: true, isExternal:
+false }
+];
+
+const TRADES_PRESET = [
+// Grade 10
+{ id: 't1', name: 'English Language Arts 10-2', gradeLevel: 10, credits: 5, mark: 70, category: 'English', is30Level:
+false, isExternal: false },
+{ id: 't2', name: 'Social Studies 10-2', gradeLevel: 10, credits: 5, mark: 72, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: 't3', name: 'Mathematics 10-3', gradeLevel: 10, credits: 5, mark: 75, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: 't4', name: 'Science 14', gradeLevel: 10, credits: 5, mark: 78, category: 'Science', is30Level: false, isExternal:
+false },
+{ id: 't5', name: 'Physical Education 10', gradeLevel: 10, credits: 3, mark: 85, category: 'PE', is30Level: false,
+isExternal: false },
+{ id: 't6', name: 'Career and Life Management (CALM)', gradeLevel: 10, credits: 3, mark: 80, category: 'CALM',
+is30Level: false, isExternal: false },
+{ id: 't7', name: 'CTS Construction 10', gradeLevel: 10, credits: 5, mark: 88, category: 'Option', is30Level: false,
+isExternal: false },
+{ id: 't8', name: 'CTS Mechanics 10', gradeLevel: 10, credits: 5, mark: 90, category: 'Option', is30Level: false,
+isExternal: false },
+
+// Grade 11
+{ id: 't9', name: 'English Language Arts 20-2', gradeLevel: 11, credits: 5, mark: 72, category: 'English', is30Level:
+false, isExternal: false },
+{ id: 't10', name: 'Social Studies 20-2', gradeLevel: 11, credits: 5, mark: 74, category: 'Social Studies', is30Level:
+false, isExternal: false },
+{ id: 't11', name: 'Mathematics 20-3', gradeLevel: 11, credits: 5, mark: 78, category: 'Mathematics', is30Level: false,
+isExternal: false },
+{ id: 't12', name: 'Science 24', gradeLevel: 11, credits: 5, mark: 80, category: 'Science', is30Level: false,
+isExternal: false },
+{ id: 't13', name: 'RAP Registered Apprenticeship 25', gradeLevel: 11, credits: 10, mark: 92, category: 'Option',
+is30Level: false, isExternal: false },
+{ id: 't14', name: 'Work Experience 25', gradeLevel: 11, credits: 5, mark: 85, category: 'Option', is30Level: false,
+isExternal: true },
+
+// Grade 12
+{ id: 't15', name: 'English Language Arts 30-2', gradeLevel: 12, credits: 5, mark: 75, category: 'English', is30Level:
+true, isExternal: false },
+{ id: 't16', name: 'Social Studies 30-2', gradeLevel: 12, credits: 5, mark: 76, category: 'Social Studies', is30Level:
+true, isExternal: false },
+{ id: 't17', name: 'RAP Registered Apprenticeship 35', gradeLevel: 12, credits: 15, mark: 94, category: 'Option',
+is30Level: true, isExternal: false },
+{ id: 't18', name: 'Special Projects 30', gradeLevel: 12, credits: 5, mark: 88, category: 'Option', is30Level: true,
+isExternal: true }
+];
+
+const PRESET_CATALOG = {
+English: [
+{ name: 'English Language Arts 10-1', credits: 5, is30Level: false },
+{ name: 'English Language Arts 10-2', credits: 5, is30Level: false },
+{ name: 'English Language Arts 20-1', credits: 5, is30Level: false },
+{ name: 'English Language Arts 20-2', credits: 5, is30Level: false },
+{ name: 'English Language Arts 30-1', credits: 5, is30Level: true },
+{ name: 'English Language Arts 30-2', credits: 5, is30Level: true }
+],
+Social: [
+{ name: 'Social Studies 10-1', credits: 5, is30Level: false },
+{ name: 'Social Studies 10-2', credits: 5, is30Level: false },
+{ name: 'Social Studies 20-1', credits: 5, is30Level: false },
+{ name: 'Social Studies 20-2', credits: 5, is30Level: false },
+{ name: 'Social Studies 30-1', credits: 5, is30Level: true },
+{ name: 'Social Studies 30-2', credits: 5, is30Level: true }
+],
+Math: [
+{ name: 'Mathematics 10C', credits: 5, is30Level: false },
+{ name: 'Mathematics 10-3', credits: 5, is30Level: false },
+{ name: 'Mathematics 20-1', credits: 5, is30Level: false },
+{ name: 'Mathematics 20-2', credits: 5, is30Level: false },
+{ name: 'Mathematics 20-3', credits: 5, is30Level: false },
+{ name: 'Mathematics 30-1', credits: 5, is30Level: true },
+{ name: 'Mathematics 30-2', credits: 5, is30Level: true },
+{ name: 'Mathematics 30-3', credits: 5, is30Level: true },
+{ name: 'Mathematics 31 (Calculus)', credits: 5, is30Level: true }
+],
+Science: [
+{ name: 'Science 10', credits: 5, is30Level: false },
+{ name: 'Science 14', credits: 5, is30Level: false },
+{ name: 'Science 20', credits: 5, is30Level: false },
+{ name: 'Science 24', credits: 5, is30Level: false },
+{ name: 'Biology 20', credits: 5, is30Level: false },
+{ name: 'Chemistry 20', credits: 5, is30Level: false },
+{ name: 'Physics 20', credits: 5, is30Level: false },
+{ name: 'Science 30', credits: 5, is30Level: true },
+{ name: 'Biology 30', credits: 5, is30Level: true },
+{ name: 'Chemistry 30', credits: 5, is30Level: true },
+{ name: 'Physics 30', credits: 5, is30Level: true }
+],
+CoreReqs: [
+{ name: 'Physical Education 10 (3cr)', credits: 3, is30Level: false, category: 'PE' },
+{ name: 'Physical Education 10 (5cr)', credits: 5, is30Level: false, category: 'PE' },
+{ name: 'Career and Life Management (CALM)', credits: 3, is30Level: false, category: 'CALM' }
+],
+Options: [
+{ name: 'Art 10', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Art 20', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Art 30', credits: 5, is30Level: true, category: 'Option' },
+{ name: 'Drama 10', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Drama 20', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Drama 30', credits: 5, is30Level: true, category: 'Option' },
+{ name: 'Music 10', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Music 20', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'Music 30', credits: 5, is30Level: true, category: 'Option' },
+{ name: 'French 10', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'French 20', credits: 5, is30Level: false, category: 'Option' },
+{ name: 'French 30', credits: 5, is30Level: true, category: 'Option' },
+{ name: 'Work Experience 15', credits: 5, is30Level: false, category: 'Option', isExternal: true },
+{ name: 'Work Experience 25', credits: 5, is30Level: false, category: 'Option', isExternal: true },
+{ name: 'Work Experience 30', credits: 5, is30Level: true, category: 'Option', isExternal: true },
+{ name: 'Registered Apprenticeship (RAP) 25', credits: 10, is30Level: false, category: 'Option' },
+{ name: 'Registered Apprenticeship (RAP) 35', credits: 15, is30Level: true, category: 'Option' },
+{ name: 'Special Projects 30', credits: 5, is30Level: true, category: 'Option', isExternal: true },
+{ name: 'CTS Intro Module', credits: 1, is30Level: false, category: 'Option' },
+{ name: 'CTS Intermediate Module', credits: 1, is30Level: false, category: 'Option' },
+{ name: 'CTS Advanced Module', credits: 1, is30Level: true, category: 'Option' }
+],
+};
+
+export default function App() {
+const [plannedCourses, setPlannedCourses] = useState(() => {
+const saved = localStorage.getItem('alberta_grad_planner_courses');
+return saved ? JSON.parse(saved) : STEM_PRESET;
+});
+
+const [theme, setTheme] = useState('dark');
+const [activeTab, setActiveTab] = useState('audit'); // audit, blender, pathways, guide
+const [activeGradeFilter, setActiveGradeFilter] = useState(10); // for catalog quickly adding to specific grade
+
+// Custom Course Creator Modal State
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [modalMode, setModalMode] = useState('add'); // add, edit
+const [editingCourseId, setEditingCourseId] = useState(null);
+const [formName, setFormName] = useState('');
+const [formGrade, setFormGrade] = useState(10);
+const [formCredits, setFormCredits] = useState(5);
+const [formMark, setFormMark] = useState('');
+const [formCategory, setFormCategory] = useState('English');
+const [formIs30Level, setFormIs30Level] = useState(false);
+const [formIsExternal, setFormIsExternal] = useState(false);
+
+// Quick Catalog Modal State
+const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+const [catalogGrade, setCatalogGrade] = useState(10);
+
+// Blend Simulator State
+const [blendCourse, setBlendCourse] = useState('English Language Arts 30-1');
+const [schoolMark, setSchoolMark] = useState(82);
+const [examMark, setExamMark] = useState(74);
+const [targetBlended, setTargetBlended] = useState(80);
+
+// Alert/Toast Overlay State
+const [toastMessage, setToastMessage] = useState(null);
+
+// Save to local storage
+useEffect(() => {
+localStorage.setItem('alberta_grad_planner_courses', JSON.stringify(plannedCourses));
+}, [plannedCourses]);
+
+const showToast = (msg) => {
+setToastMessage(msg);
+setTimeout(() => {
+setToastMessage(null);
+}, 3000);
+};
+
+const loadPreset = (key) => {
+if (key === 'stem') setPlannedCourses(STEM_PRESET);
+else if (key === 'liberal') setPlannedCourses(LIBERAL_PRESET);
+else if (key === 'trades') setPlannedCourses(TRADES_PRESET);
+else setPlannedCourses([]);
+showToast(`Loaded the ${key.toUpperCase()} standard template!`);
+};
+
+const handleOpenAddModal = (grade) => {
+setModalMode('add');
+setFormName('');
+setFormGrade(grade || 10);
+setFormCredits(5);
+setFormMark('');
+setFormCategory('Option');
+setFormIs30Level(false);
+setFormIsExternal(false);
+setIsModalOpen(true);
+};
+
+const handleOpenEditModal = (course) => {
+setModalMode('edit');
+setEditingCourseId(course.id);
+setFormName(course.name);
+setFormGrade(course.gradeLevel);
+setFormCredits(course.credits);
+setFormMark(course.mark === null || course.mark === undefined ? '' : course.mark);
+setFormCategory(course.category);
+setFormIs30Level(course.is30Level);
+setFormIsExternal(course.isExternal || false);
+setIsModalOpen(true);
+};
+
+const handleSaveCourse = (e) => {
+e.preventDefault();
+if (!formName.trim()) {
+showToast('Course name cannot be empty!');
+return;
+}
+
+const numericMark = formMark === '' ? null : Math.max(0, Math.min(100, Number(formMark)));
+
+if (modalMode === 'add') {
+const newCourse = {
+id: crypto.randomUUID(),
+name: formName.trim(),
+gradeLevel: Number(formGrade),
+credits: Number(formCredits),
+mark: numericMark,
+category: formCategory,
+is30Level: formIs30Level || formName.includes('30') || formName.includes('31') || formName.includes('35'),
+isExternal: formIsExternal
+};
+setPlannedCourses([...plannedCourses, newCourse]);
+showToast(`Added "${newCourse.name}" to Grade ${newCourse.gradeLevel}!`);
+} else {
+setPlannedCourses(plannedCourses.map(c => {
+if (c.id === editingCourseId) {
+return {
+...c,
+name: formName.trim(),
+gradeLevel: Number(formGrade),
+credits: Number(formCredits),
+mark: numericMark,
+category: formCategory,
+is30Level: formIs30Level || formName.includes('30') || formName.includes('31') || formName.includes('35'),
+isExternal: formIsExternal
+};
+}
+return c;
+}));
+showToast('Course modified successfully!');
+}
+setIsModalOpen(false);
+};
+
+const handleQuickCatalogAdd = (course, grade) => {
+let determinedCategory = 'Option';
+if (course.name.toLowerCase().includes('english') || course.name.toLowerCase().includes('ela')) {
+determinedCategory = 'English';
+} else if (course.name.toLowerCase().includes('social')) {
+determinedCategory = 'Social Studies';
+} else if (course.name.toLowerCase().includes('math')) {
+determinedCategory = 'Mathematics';
+} else if (course.name.toLowerCase().includes('science') || course.name.toLowerCase().includes('biology') ||
+course.name.toLowerCase().includes('chemistry') || course.name.toLowerCase().includes('physics')) {
+determinedCategory = 'Science';
+} else if (course.name.toLowerCase().includes('pe') || course.name.toLowerCase().includes('physical education')) {
+determinedCategory = 'PE';
+} else if (course.name.toLowerCase().includes('calm')) {
+determinedCategory = 'CALM';
+}
+
+const newCourse = {
+id: crypto.randomUUID(),
+name: course.name,
+gradeLevel: Number(grade),
+credits: course.credits,
+mark: 80, // default placeholder mark
+category: course.category || determinedCategory,
+is30Level: course.is30Level,
+isExternal: course.isExternal || false
+};
+
+setPlannedCourses([...plannedCourses, newCourse]);
+showToast(`Quick added "${course.name}" to Grade ${grade}!`);
+};
+
+const handleDeleteCourse = (id) => {
+const courseToDelete = plannedCourses.find(c => c.id === id);
+setPlannedCourses(plannedCourses.filter(c => c.id !== id));
+showToast(`Removed "${courseToDelete?.name}"`);
+};
+
+// Live Auditing Engine based on Alberta Graduation Rules
+const audit = useMemo(() => {
+// 1. Credits calculation - only counts if mark is blank (planned) or >= 50 (passed)
+const validCourses = plannedCourses.filter(c => c.mark === null || c.mark === undefined || c.mark >= 50);
+const totalCredits = validCourses.reduce((sum, c) => sum + (c.credits || 0), 0);
+
+// 2. English 30-1 or 30-2 (Needs at least one 5-credit course)
+const english30Courses = validCourses.filter(c =>
+c.category === 'English' && c.is30Level && c.credits >= 5
+);
+const hasEnglish30 = english30Courses.length > 0;
+
+// 3. Social Studies 30-1 or 30-2 (Needs at least one 5-credit course)
+const social30Courses = validCourses.filter(c =>
+c.category === 'Social Studies' && c.is30Level && c.credits >= 5
+);
+const hasSocial30 = social30Courses.length > 0;
+
+// 4. Mathematics 20-level or higher (20-1, 20-2, 20-3, or any 30-level)
+const hasMath20 = validCourses.some(c =>
+c.category === 'Mathematics' &&
+(c.name.includes('20') || c.name.includes('30') || c.name.includes('31')) &&
+c.credits >= 5
+);
+
+// 5. Science 20-level or higher (Science 20, Science 24, Biology 20, Chemistry 20, Physics 20, or 30-levels)
+const directScience20 = validCourses.some(c =>
+c.category === 'Science' &&
+(c.name.includes('20') || c.name.includes('30')) &&
+c.credits >= 5
+);
+// Alternative science rule: Science 10 AND Science 14 combination (10 credits total)
+const hasScience10 = validCourses.some(c => c.name.toLowerCase().includes('science 10') && c.credits >= 5);
+const hasScience14 = validCourses.some(c => c.name.toLowerCase().includes('science 14') && c.credits >= 5);
+const hasAlternativeScience = hasScience10 && hasScience14;
+const hasScience20 = directScience20 || hasAlternativeScience;
+
+// 6. Physical Education 10 (minimum 3 credits)
+const hasPE10 = validCourses.some(c =>
+c.category === 'PE' && c.name.toLowerCase().includes('10') && c.credits >= 3
+);
+
+// 7. Career and Life Management (CALM) (minimum 3 credits)
+const hasCALM = validCourses.some(c =>
+c.category === 'CALM' && c.credits >= 3
+);
+
+// 8. 10 Credits in Options (CTS, Fine Arts, Languages, PE 20/30, RAP, K&E, locally developed)
+const optionCourses = validCourses.filter(c =>
+c.category === 'Option' || c.category === 'PE' && (c.name.includes('20') || c.name.includes('30'))
+);
+const optionCredits = optionCourses.reduce((sum, c) => sum + c.credits, 0);
+const optionCreditsSatisfied = optionCredits >= 10;
+
+// 9. 10 Credits in any other 30-level courses (excluding English 30-x and Social 30-x)
+const other30LevelCourses = validCourses.filter(c =>
+c.is30Level && c.category !== 'English' && c.category !== 'Social Studies'
+);
+const extra30Credits = other30LevelCourses.reduce((sum, c) => sum + c.credits, 0);
+const extra30CreditsSatisfied = extra30Credits >= 10;
+
+// External learning check (Maximum 5 external learning credits can count towards 100)
+const externalCreditsTotal = plannedCourses.reduce((sum, c) => c.isExternal ? sum + c.credits : sum, 0);
+const externalOverCap = externalCreditsTotal > 5;
+// To make calculations perfectly accurate, adjust total planned credits for graduation by deducting external over-cap
+if needed
+const adjustedTotalCreditsForGraduation = totalCredits - (externalOverCap ? (externalCreditsTotal - 5) : 0);
+
+// Graduation rules checklist
+const rulesList = [
+{ id: 'credits', label: 'Earn at least 100 high school credits', met: adjustedTotalCreditsForGraduation >= 100, current:
+`${adjustedTotalCreditsForGraduation}/100 cr` },
+{ id: 'english', label: 'English Language Arts 30-level (30-1 or 30-2)', met: hasEnglish30, current: hasEnglish30 ?
+'Satisfied' : 'Missing 30-level' },
+{ id: 'social', label: 'Social Studies 30-level (30-1 or 30-2)', met: hasSocial30, current: hasSocial30 ? 'Satisfied' :
+'Missing 30-level' },
+{ id: 'math', label: 'Mathematics 20-level or higher', met: hasMath20, current: hasMath20 ? 'Satisfied' : 'Missing
+20-level' },
+{ id: 'science', label: 'Science 20-level, or Science 10 + 14 combo', met: hasScience20, current: hasScience20 ?
+'Satisfied' : 'Missing' },
+{ id: 'pe', label: 'Physical Education 10 (minimum 3 credits)', met: hasPE10, current: hasPE10 ? 'Satisfied' : 'Missing'
+},
+{ id: 'calm', label: 'Career and Life Management (CALM)', met: hasCALM, current: hasCALM ? 'Satisfied' : 'Missing' },
+{ id: 'options', label: '10 credits in Options (CTS, Fine Arts, French, Languages, RAP, Work Exp)', met:
+optionCreditsSatisfied, current: `${optionCredits}/10 cr` },
+{ id: 'extra30', label: '10 credits in any other 30-level course', met: extra30CreditsSatisfied, current:
+`${extra30Credits}/10 cr` }
+];
+
+const satisfiedCount = rulesList.filter(r => r.met).length;
+const readinessPercentage = Math.round((satisfiedCount / rulesList.length) * 100);
+
+// Calculate Average Mark of all graded courses
+const gradedCourses = plannedCourses.filter(c => c.mark !== null && c.mark !== undefined);
+const averageMark = gradedCourses.length > 0
+? Math.round(gradedCourses.reduce((sum, c) => sum + c.mark, 0) / gradedCourses.length)
+: null;
+
+return {
+totalCredits,
+adjustedTotalCreditsForGraduation,
+hasEnglish30,
+hasSocial30,
+hasMath20,
+hasScience20,
+hasPE10,
+hasCALM,
+optionCredits,
+extra30Credits,
+externalCreditsTotal,
+externalOverCap,
+rulesList,
+satisfiedCount,
+readinessPercentage,
+averageMark
+};
+}, [plannedCourses]);
+
+// Pathway validation module
+const pathways = useMemo(() => {
+const courses = plannedCourses.filter(c => c.mark === null || c.mark === undefined || c.mark >= 50);
+const names = courses.map(c => c.name.toLowerCase());
+
+const hasPhysics30 = names.some(n => n.includes('physics 30'));
+const hasChem30 = names.some(n => n.includes('chemistry 30'));
+const hasBio30 = names.some(n => n.includes('biology 30'));
+const hasMath30_1 = names.some(n => n.includes('mathematics 30-1') || n.includes('math 30-1'));
+const hasMath30_2 = names.some(n => n.includes('mathematics 30-2') || n.includes('math 30-2'));
+const hasMath31 = names.some(n => n.includes('math 31') || n.includes('mathematics 31') || n.includes('calculus'));
+const hasScience30 = names.some(n => n.includes('science 30'));
+const hasSocial30_1 = names.some(n => n.includes('social studies 30-1') || n.includes('social 30-1'));
+
+const list = [
+{
+name: 'Engineering (UAlberta / UCalgary / MRU)',
+desc: 'Requires highly advanced math and science sequences.',
+reqs: ['ELA 30-1', 'Math 30-1', 'Math 31 (Calculus)', 'Chemistry 30', 'Physics 30'],
+status: (audit.hasEnglish30 && hasMath30_1 && hasMath31 && hasChem30 && hasPhysics30) ? 'Qualified' :
+(audit.hasEnglish30 || hasMath30_1 || hasChem30 || hasPhysics30) ? 'In Progress' : 'Locked',
+missing: [
+!audit.hasEnglish30 && 'ELA 30-1',
+!hasMath30_1 && 'Math 30-1',
+!hasMath31 && 'Math 31 (Calculus)',
+!hasChem30 && 'Chemistry 30',
+!hasPhysics30 && 'Physics 30'
+].filter(Boolean)
+},
+{
+name: 'Bachelor of Science (General Science)',
+desc: 'Broad scientific route for post-secondary admissions.',
+reqs: ['ELA 30-1', 'Math 30-1', 'Two of: Chemistry 30, Physics 30, Biology 30, Science 30'],
+status: (audit.hasEnglish30 && hasMath30_1 && [hasChem30, hasPhysics30, hasBio30, hasScience30].filter(Boolean).length
+>= 2) ? 'Qualified' :
+(audit.hasEnglish30 || hasMath30_1) ? 'In Progress' : 'Locked',
+missing: [
+!audit.hasEnglish30 && 'ELA 30-1',
+!hasMath30_1 && 'Math 30-1',
+[hasChem30, hasPhysics30, hasBio30, hasScience30].filter(Boolean).length < 2 && 'At least two 30-level Sciences'
+    ].filter(Boolean) }, { name: 'Business & Commerce (BCom)' ,
+    desc: 'Prerequisites for business administration, marketing, finance.' , reqs: ['ELA
+    30-1', 'Math 30-1 (or Math 30-2 for some programs)' , 'Three additional academic 30-levels' ], status:
+    (audit.hasEnglish30 && (hasMath30_1 || hasMath30_2) && audit.extra30Credits>= 15) ? 'Qualified' : 'In Progress',
+    missing: [
+    !audit.hasEnglish30 && 'ELA 30-1',
+    !(hasMath30_1 || hasMath30_2) && 'Math 30-1 or 30-2',
+    audit.extra30Credits < 15 && 'Missing 15 credits in other 30-level academics' ].filter(Boolean) }, {
+        name: 'Bachelor of Arts / Humanities' , desc: 'Perfect for journalism, political science, history, linguistics.'
+        , reqs: ['ELA 30-1', 'Social Studies 30-1' , 'Three other 30-level option courses' ], status:
+        (audit.hasEnglish30 && hasSocial30_1 && audit.extra30Credits>= 15) ? 'Qualified' : 'In Progress',
+        missing: [
+        !audit.hasEnglish30 && 'ELA 30-1',
+        !hasSocial30_1 && 'Social Studies 30-1',
+        audit.extra30Credits < 15 && 'Missing other 30-level courses' ].filter(Boolean) }, { name: 'Bachelor of Nursing'
+            , desc: 'Competitive medical program across Alberta institutions.' , reqs: ['ELA 30-1', 'Math 30-1 or 30-2'
+            , 'Biology 30' , 'Chemistry 30' ], status: (audit.hasEnglish30 && (hasMath30_1 || hasMath30_2) && hasBio30
+            && hasChem30) ? 'Qualified' : 'In Progress' , missing: [ !audit.hasEnglish30 && 'ELA 30-1' , !(hasMath30_1
+            || hasMath30_2) && 'Math 30-1 or 30-2' , !hasBio30 && 'Biology 30' , !hasChem30 && 'Chemistry 30'
+            ].filter(Boolean) }, { name: 'Trades, Apprenticeships, & RAP Route' ,
+            desc: 'Direct entrance into Alberta technical careers and workplaces.' , reqs: ['ELA 30-2 or
+            30-1', 'Social 30-2 or 30-1' , 'Math 20-3 or higher' , 'Science 20 or 24' , 'CTS modules or RAP courses' ],
+            status: (audit.hasEnglish30 && audit.hasSocial30 && audit.hasMath20 && audit.hasScience20 &&
+            audit.optionCredits>= 10) ? 'Qualified' : 'In Progress',
+            missing: [
+            !audit.hasEnglish30 && 'ELA 30-level',
+            !audit.hasSocial30 && 'Social 30-level',
+            !audit.hasMath20 && 'Math 20-level',
+            !audit.hasScience20 && 'Science 20-level/24',
+            audit.optionCredits < 10 && 'Needs CTS or RAP options' ].filter(Boolean) } ]; return list; },
+                [plannedCourses, audit]); // Blended Mark Calculation const blendedMark=useMemo(()=> {
+                return Math.round((schoolMark * 0.7) + (examMark * 0.3));
+                }, [schoolMark, examMark]);
+
+                // Calculate needed exam mark for target
+                const neededExamMark = useMemo(() => {
+                // target = (school * 0.7) + (exam * 0.3)
+                // target - school * 0.7 = exam * 0.3
+                // exam = (target - school * 0.7) / 0.3
+                const value = (targetBlended - (schoolMark * 0.7)) / 0.3;
+                return Math.round(value);
+                }, [schoolMark, targetBlended]);
+
+                // Clipboard export builder
+                const handleCopySummary = () => {
+                const buildSummaryText = () => {
+                return `
+                ========================================
+                ALBERTA HIGH SCHOOL GRADUATION PLAN
+                ========================================
+                Generated via Albertgrad Credit & Grad Planner
+
+                PLANNER SUMMARY:
+                - Total Planned Credits: ${audit.totalCredits} credits
+                - Adjusted Graduation Credits: ${audit.adjustedTotalCreditsForGraduation} credits (Capped at 5 cr
+                external learning)
+                - Grad Requirements Satisfied: ${audit.satisfiedCount} / 9 rules (${audit.readinessPercentage}%
+                Complete)
+                - Average Course Mark: ${audit.averageMark ? `${audit.averageMark}%` : 'No marks entered yet'}
+
+                COURSES REGISTERED:
+                --- GRADE 10 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 10).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                --- GRADE 11 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 11).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                --- GRADE 12 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 12).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                GRADUATION CHECKLIST AUDIT:
+                ${audit.rulesList.map(r => `[${r.met ? '✓' : '✗'}] ${r.label} (${r.current})`).join('\n')}
+
+                ========================================
+                `;
+                };
+
+                const text = buildSummaryText();
+
+                // Try Clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                showToast('Graduation summary copied to clipboard!');
+                }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Graduation summary copied to clipboard!');
+                });
+                } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Graduation summary copied to clipboard!');
+                }
+                };
+
+                // Download TXT summary
+                const handleDownloadSummary = () => {
+                const buildSummaryText = () => {
+                return `
+                ========================================
+                ALBERTA HIGH SCHOOL GRADUATION PLAN
+                ========================================
+                Generated via Albertgrad Credit & Grad Planner
+
+                PLANNER SUMMARY:
+                - Total Planned Credits: ${audit.totalCredits} credits
+                - Adjusted Graduation Credits: ${audit.adjustedTotalCreditsForGraduation} credits (Capped at 5 cr
+                external learning)
+                - Grad Requirements Satisfied: ${audit.satisfiedCount} / 9 rules (${audit.readinessPercentage}%
+                Complete)
+                - Average Course Mark: ${audit.averageMark ? `${audit.averageMark}%` : 'No marks entered yet'}
+
+                COURSES REGISTERED:
+                --- GRADE 10 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 10).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                --- GRADE 11 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 11).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                --- GRADE 12 ---
+                ${plannedCourses.filter(c => c.gradeLevel === 12).map(c => `- ${c.name} (${c.credits} Credits, Mark:
+                ${c.mark ?? 'Planned'})`).join('\n')}
+
+                GRADUATION CHECKLIST AUDIT:
+                ${audit.rulesList.map(r => `[${r.met ? '✓' : '✗'}] ${r.label} (${r.current})`).join('\n')}
+
+                ========================================
+                `;
+                };
+
+                const blob = new Blob([buildSummaryText()], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `albertgrad-plan-${new Date().toISOString().slice(0,10)}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Graduation summary downloaded.');
+                };
+
+                // Export structured JSON
+                const handleExportJSON = () => {
+                const payload = {
+                generatedAt: new Date().toISOString(),
+                audit,
+                plannedCourses
+                };
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `albertgrad-plan-${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Exported plan as JSON.');
+                };
+
+                return (
+                <div className={`min-h-screen font-sans transition-colors duration-200 ${theme==='dark'
+                    ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-850' }`}>
+
+                    {/* Toast Alert Banner */}
+                    {toastMessage && (
+                    <div
+                        className="fixed top-4 right-4 z-50 animate-bounce bg-indigo-600 text-white px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 font-semibold border border-indigo-400">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {toastMessage}
+                    </div>
+                    )}
+
+                    {/* Header Bar */}
+                    <header className={`sticky top-0 z-40 border-b px-6 py-4 flex flex-col md:flex-row justify-between
+                        items-center gap-4 ${theme==='dark' ? 'bg-slate-900/90 border-slate-800'
+                        : 'bg-white/90 border-slate-200' }`}>
+                        <div className="flex items-center gap-3">
+                            <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-md">
+                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M12 14l9-5-9-5-9 5 9 5z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h1
+                                    className="text-2xl font-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                                    ALBERTGRAD</h1>
+                                <p className="text-xs text-slate-400 font-medium">Interactive Credit Planning Assistant
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Global Preset Loaders & Themes */}
+                        <div className="flex flex-wrap items-center gap-2">
+                            <div
+                                className="flex items-center gap-2 bg-slate-800/50 p-1 rounded-xl border border-slate-700">
+                                <span className="text-xs font-semibold px-2 text-slate-400">Load Preset:</span>
+                                <button onClick={()=> loadPreset('stem')} className="text-xs bg-slate-800
+                                    hover:bg-indigo-600 hover:text-white text-slate-200 px-3 py-1.5 rounded-lg
+                                    font-medium transition">STEM</button>
+                                <button onClick={()=> loadPreset('liberal')} className="text-xs bg-slate-800
+                                    hover:bg-violet-600 hover:text-white text-slate-200 px-3 py-1.5 rounded-lg
+                                    font-medium transition">Humanities</button>
+                                <button onClick={()=> loadPreset('trades')} className="text-xs bg-slate-800
+                                    hover:bg-emerald-600 hover:text-white text-slate-200 px-3 py-1.5 rounded-lg
+                                    font-medium transition">Trades/RAP</button>
+                                <button onClick={()=> loadPreset('clear')} className="text-xs bg-red-950/40 text-red-400
+                                    hover:bg-red-900 hover:text-white px-3 py-1.5 rounded-lg font-medium
+                                    transition">Clear</button>
+                            </div>
+
+                            <button onClick={()=> setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                className={`p-2.5 rounded-xl border ${theme === 'dark' ? 'bg-slate-800 border-slate-700
+                                text-yellow-400' : 'bg-slate-100 border-slate-200 text-slate-600'}`}
+                                title="Toggle theme color"
+                                >
+                                {theme === 'dark' ? (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 12.728A9 9 0 115.636 5.636m12.728 12.728A9 9 0 015.636 5.636" />
+                                </svg>
+                                ) : (
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                                )}
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Main Grid View */}
+                    <main className="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                        {/* TOP LEVEL OVERVIEW PANELS */}
+                        <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                            {/* Credits planned status bar card */}
+                            <div className={`p-5 rounded-2xl border shadow-sm ${theme==='dark'
+                                ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200' }`}>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span
+                                            className="text-xs text-slate-400 font-bold uppercase tracking-wider">Total
+                                            Credits Planned</span>
+                                        <h3 className="text-3xl font-black mt-1 text-indigo-500">
+                                            {audit.adjustedTotalCreditsForGraduation} <span
+                                                className="text-lg text-slate-400 font-normal">/ 100 cr</span>
+                                        </h3>
+                                    </div>
+                                    <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-500">
+                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                {/* Progress bar */}
+                                <div className="w-full bg-slate-800 rounded-full h-3.5 mb-2 overflow-hidden">
+                                    <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-full rounded-full transition-all duration-500"
+                                        style={{ width: `${Math.min(100, (audit.adjustedTotalCreditsForGraduation / 100) * 100)}%` }}>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-slate-400 font-semibold">
+                                        {audit.adjustedTotalCreditsForGraduation >= 100 ? '🎉 Credit Target Satisfied!'
+                                        : `${100 - audit.adjustedTotalCreditsForGraduation} more credits required`}
+                                    </span>
+                                    <span className="text-slate-400 font-medium">Goal: 100</span>
+                                </div>
+                                {audit.externalOverCap && (
+                                <div
+                                    className="mt-2.5 p-2 bg-yellow-950/30 text-yellow-500 rounded-lg text-xs border border-yellow-800/40 flex items-center gap-1.5">
+                                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <span>Capped at 5 credits for external courses! (Planned:
+                                        {audit.externalCreditsTotal} credits)</span>
+                                </div>
+                                )}
+                            </div>
+
+                            {/* Grad Requirements checklist tracker card */}
+                            <div className={`p-5 rounded-2xl border shadow-sm ${theme==='dark'
+                                ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200' }`}>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span
+                                            className="text-xs text-slate-400 font-bold uppercase tracking-wider">Alberta
+                                            Graduation Audit</span>
+                                        <h3 className="text-3xl font-black mt-1 text-violet-500">
+                                            {audit.readinessPercentage}% <span
+                                                className="text-lg text-slate-400 font-normal">Ready</span>
+                                        </h3>
+                                    </div>
+                                    <div className="p-2 rounded-xl bg-violet-500/10 text-violet-500">
+                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="w-full bg-slate-800 rounded-full h-3.5 mb-2 overflow-hidden">
+                                    <div className="bg-gradient-to-r from-violet-500 to-violet-600 h-full rounded-full transition-all duration-500"
+                                        style={{ width: `${audit.readinessPercentage}%` }}></div>
+                                </div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-slate-400 font-semibold">{audit.satisfiedCount} of 9 core
+                                        categories satisfied</span>
+                                    <span className="text-slate-400 font-medium">9 / 9 Required</span>
+                                </div>
+                            </div>
+
+                            {/* GPA Course average mark card */}
+                            <div className={`p-5 rounded-2xl border shadow-sm ${theme==='dark'
+                                ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200' }`}>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span
+                                            className="text-xs text-slate-400 font-bold uppercase tracking-wider">Admission
+                                            GPA Average</span>
+                                        <h3 className="text-3xl font-black mt-1 text-emerald-500">
+                                            {audit.averageMark !== null ? `${audit.averageMark}%` : 'N/A'}
+                                        </h3>
+                                    </div>
+                                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.905c.961 0 1.355 1.24.588 1.81l-3.97 2.87a1 1 0 00-.364 1.118l1.52 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.87a1 1 0 00-1.175 0l-3.97 2.87c-.782.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.97-2.87c-.768-.57-.374-1.81.588-1.81h4.905a1 1 0 00.951-.69l1.519-4.674z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                {/* Average meter */}
+                                <div className="w-full bg-slate-800 rounded-full h-3.5 mb-2 overflow-hidden">
+                                    <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-full rounded-full transition-all duration-500"
+                                        style={{ width: `${audit.averageMark || 0}%` }}></div>
+                                </div>
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-slate-400 font-semibold">
+                                        {audit.averageMark >= 80 ? '🌟 Standard of Excellence achieved' :
+                                        audit.averageMark >= 50 ? '👍 Standard of Pass achieved' : 'Plan marks to verify
+                                        GPA average'}
+                                    </span>
+                                    <span className="text-slate-400 font-medium">Goal: 80%+</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {/* LEFT PANEL: MAIN COURSE BOARD PLANNER (8 Cols on desktop) */}
+                        <div className="lg:col-span-7 space-y-6">
+
+                            <div
+                                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <div>
+                                    <h2 className="text-xl font-bold tracking-tight">Your High School Planning Canvas
+                                    </h2>
+                                    <p className="text-sm text-slate-400">Distribute your 100 required credits across
+                                        Grade 10, 11, and 12</p>
+                                </div>
+                                <div className="flex gap-2 w-full sm:w-auto">
+                                    <button onClick={()=> {
+                                        setCatalogGrade(10);
+                                        setIsCatalogOpen(true);
+                                        }}
+                                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-xs
+                                        bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border
+                                        border-slate-700 font-semibold transition"
+                                        >
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20" />
+                                        </svg>
+                                        Course Library
+                                    </button>
+                                    <button onClick={()=> handleOpenAddModal(10)}
+                                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-xs
+                                        bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl shadow-lg
+                                        font-semibold transition"
+                                        >
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
+                                                d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Create Custom
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Grade boards */}
+                            {[10, 11, 12].map((gradeNum) => {
+                            const gradeCourses = plannedCourses.filter(c => c.gradeLevel === gradeNum);
+                            const gradeCredits = gradeCourses.reduce((sum, c) => sum + c.credits, 0);
+
+                            // Standard Alberta recommendation benchmarks for credit distribution
+                            const recommendedMin = gradeNum === 10 ? 38 : gradeNum === 11 ? 35 : 30;
+                            const recommendedMax = gradeNum === 10 ? 45 : gradeNum === 11 ? 40 : 38;
+                            const isUnderPlanned = gradeCredits < recommendedMin; return ( <div key={gradeNum}
+                                className={`rounded-2xl border p-4 transition-all duration-200 ${theme==='dark'
+                                ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200' }`}>
+
+                                {/* Year Header */}
+                                <div
+                                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-4">
+                                    <div>
+                                        <h3 className="font-extrabold text-lg flex items-center gap-2">
+                                            <span
+                                                className="p-1 rounded-lg bg-indigo-600 text-white text-xs font-black">GR
+                                                {gradeNum}</span>
+                                            Grade {gradeNum === 10 ? '10 (Sophomore)' : gradeNum === 11 ? '11 (Junior)'
+                                            : '12 (Senior)'}
+                                        </h3>
+                                        <p className="text-xs text-slate-400 mt-0.5">Recommended targets:
+                                            {recommendedMin}-{recommendedMax} credits</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${isUnderPlanned
+                                            ? 'bg-yellow-950 text-yellow-500 border border-yellow-800'
+                                            : 'bg-indigo-950 text-indigo-400 border border-indigo-900' }`}>
+                                            Planned: {gradeCredits} credits
+                                        </span>
+                                        <button onClick={()=> handleOpenAddModal(gradeNum)}
+                                            className="p-1 text-slate-400 hover:text-indigo-500 rounded-lg transition"
+                                            title="Add course to this year"
+                                            >
+                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Course List Cards */}
+                                {gradeCourses.length === 0 ? (
+                                <div
+                                    className="text-center py-8 px-4 rounded-xl border border-dashed border-slate-800 text-slate-500 text-xs">
+                                    No courses added for Grade {gradeNum} yet.
+                                    <div className="flex justify-center gap-2 mt-3">
+                                        <button onClick={()=> {
+                                            setCatalogGrade(gradeNum);
+                                            setIsCatalogOpen(true);
+                                            }}
+                                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5
+                                            rounded-lg font-bold"
+                                            >
+                                            Browse Course Catalog
+                                        </button>
+                                        <button onClick={()=> handleOpenAddModal(gradeNum)}
+                                            className="bg-indigo-950 hover:bg-indigo-900 text-indigo-400 px-3 py-1.5
+                                            rounded-lg font-bold"
+                                            >
+                                            + Create Custom
+                                        </button>
+                                    </div>
+                                </div>
+                                ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {gradeCourses.map((course) => {
+                                    // Get custom badge colors based on category
+                                    let categoryColor = 'border-slate-800 text-slate-400 bg-slate-900/40';
+                                    if (course.category === 'English') categoryColor = 'border-indigo-800
+                                    text-indigo-400 bg-indigo-950/40';
+                                    else if (course.category === 'Social Studies') categoryColor = 'border-pink-800
+                                    text-pink-400 bg-pink-950/40';
+                                    else if (course.category === 'Mathematics') categoryColor = 'border-sky-800
+                                    text-sky-400 bg-sky-950/40';
+                                    else if (course.category === 'Science') categoryColor = 'border-emerald-800
+                                    text-emerald-400 bg-emerald-950/40';
+                                    else if (course.category === 'PE' || course.category === 'CALM') categoryColor =
+                                    'border-teal-800 text-teal-400 bg-teal-950/40';
+                                    else if (course.category === 'Option') categoryColor = 'border-violet-800
+                                    text-violet-400 bg-violet-950/40';
+
+                                    const isFailing = course.mark !== null && course.mark < 50; return ( <div
+                                        key={course.id} className={`relative border rounded-xl p-3 flex justify-between
+                                        items-start gap-2 group transition-all duration-150 ${theme==='dark'
+                                        ? 'bg-slate-900/60 hover:bg-slate-900 hover:border-slate-700 border-slate-800'
+                                        : 'bg-white hover:bg-slate-50 hover:border-slate-300 border-slate-200' }`}>
+                                        <div className="space-y-1.5 pr-8">
+                                            <div className="flex items-start flex-wrap gap-1.5">
+                                                <span className={`text-[10px] font-black px-1.5 py-0.5 rounded border
+                                                    uppercase shrink-0 ${categoryColor}`}>
+                                                    {course.category || 'Course'}
+                                                </span>
+                                                {course.is30Level && (
+                                                <span
+                                                    className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-yellow-800 text-yellow-400 bg-yellow-950/40 shrink-0">
+                                                    30-Level
+                                                </span>
+                                                )}
+                                                {course.isExternal && (
+                                                <span
+                                                    className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-rose-800 text-rose-400 bg-rose-950/40 shrink-0"
+                                                    title="Counts up to maximum 5 credits toward grad total">
+                                                    External Learning
+                                                </span>
+                                                )}
+                                            </div>
+
+                                            <h4 className="font-bold text-sm tracking-tight">{course.name}</h4>
+
+                                            <div className="flex items-center gap-3 text-xs text-slate-400">
+                                                <span className="flex items-center gap-1 font-semibold text-indigo-400">
+                                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round"
+                                                            strokeWidth={2.5}
+                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    {course.credits} Credits
+                                                </span>
+                                                {course.mark !== null ? (
+                                                <span className={`font-semibold flex items-center gap-1 ${isFailing
+                                                    ? 'text-rose-500' : 'text-slate-200' }`}>
+                                                    Mark: {course.mark}%
+                                                    {isFailing && <span
+                                                        className="text-[10px] bg-rose-950 text-rose-400 border border-rose-800 px-1.5 rounded font-black">No
+                                                        Credit</span>}
+                                                </span>
+                                                ) : (
+                                                <span
+                                                    className="italic text-slate-500 font-medium text-[11px]">(Planned)</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Float Card Controls */}
+                                        <div
+                                            className="absolute right-2 top-2 flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onClick={()=> handleOpenEditModal(course)}
+                                                className="p-1 rounded-md text-slate-400 hover:text-indigo-400
+                                                hover:bg-slate-800 transition"
+                                                title="Edit course details"
+                                                >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </button>
+                                            <button onClick={()=> handleDeleteCourse(course.id)}
+                                                className="p-1 rounded-md text-slate-400 hover:text-rose-500
+                                                hover:bg-slate-800 transition"
+                                                title="Remove course"
+                                                >
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                </div>
+                                );
+                                })}
+                        </div>
+                        )}
+                </div>
+                );
+                })}
+
+                {/* Export / Print Actions */}
+                <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row justify-between items-center gap-3
+                    ${theme==='dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200' }`}>
+                    <div className="text-left">
+                        <h4 className="font-bold text-sm">Graduation Plan Locked & Final?</h4>
+                        <p className="text-xs text-slate-400">Export this report for direct counselor appraisal.</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                        <button onClick={handleCopySummary}
+                            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md transition">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 10v6m0 0l-3-3m3 3l3-3" />
+                            </svg>
+                            Copy
+                        </button>
+
+                        <button onClick={handleDownloadSummary}
+                            className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs flex justify-center items-center gap-1.5 border border-slate-700 transition">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M12 3v10m0 0l-3-3m3 3l3-3M4 21h16" />
+                            </svg>
+                            Download (.txt)
+                        </button>
+
+                        <button onClick={handleExportJSON}
+                            className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md transition">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M7 8h10M7 12h4m1 8h-6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2z" />
+                            </svg>
+                            Export JSON
+                        </button>
+                    </div>
+                </div>
+
+                </div>
+
+                {/* RIGHT PANEL: AUDIT DECK & METRICS & WIDGETS (5 Cols on desktop) */}
+                <div className="lg:col-span-5 space-y-6">
+
+                    {/* Deck Tabbing Control */}
+                    <div className={`rounded-xl border p-1 flex gap-1 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-slate-100 border-slate-200' }`}>
+                        <button onClick={()=> setActiveTab('audit')}
+                            className={`flex-1 text-center py-2.5 rounded-lg text-xs font-bold transition-all
+                            ${activeTab === 'audit' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400
+                            hover:text-slate-200'}`}
+                            >
+                            Checklist
+                        </button>
+                        <button onClick={()=> setActiveTab('blender')}
+                            className={`flex-1 text-center py-2.5 rounded-lg text-xs font-bold transition-all
+                            ${activeTab === 'blender' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400
+                            hover:text-slate-200'}`}
+                            >
+                            Diploma Blend
+                        </button>
+                        <button onClick={()=> setActiveTab('pathways')}
+                            className={`flex-1 text-center py-2.5 rounded-lg text-xs font-bold transition-all
+                            ${activeTab === 'pathways' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400
+                            hover:text-slate-200'}`}
+                            >
+                            Pathways
+                        </button>
+                        <button onClick={()=> setActiveTab('guide')}
+                            className={`flex-1 text-center py-2.5 rounded-lg text-xs font-bold transition-all
+                            ${activeTab === 'guide' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400
+                            hover:text-slate-200'}`}
+                            >
+                            Guide
+                        </button>
+                    </div>
+
+                    {/* TAB 1: DETAILED AUDIT CHECKLIST */}
+                    {activeTab === 'audit' && (
+                    <div className={`rounded-2xl border p-5 space-y-4 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-white border-slate-200' }`}>
+                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <h3 className="font-extrabold text-base flex items-center gap-1.5">
+                                <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Alberta Diploma Audit
+                            </h3>
+                            <span className="text-xs bg-slate-800 text-slate-300 font-bold px-2 py-1 rounded">Official
+                                Standard</span>
+                        </div>
+
+                        {/* Individual requirement checklist boxes */}
+                        <div className="space-y-3">
+                            {audit.rulesList.map((rule) => (
+                            <div key={rule.id} className={`flex items-center justify-between p-3 rounded-xl border
+                                text-xs transition ${rule.met ? (theme==='dark'
+                                ? 'bg-emerald-950/20 border-emerald-900/40' : 'bg-emerald-50 border-emerald-200' ) :
+                                (theme==='dark' ? 'bg-slate-900/40 border-slate-800' : 'bg-white border-slate-200' )}`}>
+                                <div className="flex items-start gap-3">
+                                    <div className={`mt-0.5 rounded-full p-0.5 shrink-0 ${rule.met
+                                        ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-slate-500' }`}>
+                                        {rule.met ? (
+                                        <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clipRule="evenodd" />
+                                        </svg>
+                                        ) : (
+                                        <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clipRule="evenodd" />
+                                        </svg>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className={`font-bold ${rule.met ? 'text-emerald-400' : 'text-slate-300' }`}>
+                                            {rule.label}</p>
+                                        <p className="text-[10px] text-slate-500 mt-0.5">
+                                            {rule.id === 'options' && 'Requires CTS, fine arts, languages, second PE, or
+                                            RAP'}
+                                            {rule.id === 'extra30' && 'Requires 30-level options other than
+                                            ELA/Socials'}
+                                            {rule.id === 'science' && 'Science 20 level (Science 20/24, Chem 20, Phys
+                                            20, Bio 20, or Bio/Chem/Phys 30)'}
+                                            {rule.id === 'math' && 'Math 20 level (Math 20-1, 20-2, 20-3 or Math 30)'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <span className={`font-black px-2 py-1 rounded text-[11px] uppercase ${rule.met
+                                    ? 'bg-emerald-950/40 text-emerald-400' : 'bg-slate-800 text-slate-400' }`}>
+                                    {rule.current}
+                                </span>
+                            </div>
+                            ))}
+                        </div>
+
+                        {/* Summary message */}
+                        <div
+                            className="bg-slate-800/40 p-3 rounded-xl border border-slate-800 text-xs text-slate-400 leading-relaxed">
+                            <span className="font-extrabold text-slate-200 block mb-1">💡 Real-time Auditor
+                                Advice:</span>
+                            {audit.satisfiedCount === 9 ? (
+                            <span className="text-emerald-400 font-semibold">Incredible! You have planned a robust
+                                schedule that fully satisfies all minimum conditions to secure your Alberta High School
+                                Diploma. You are graduation ready!</span>
+                            ) : (
+                            <span>Ensure you plan at least 100 valid credits (currently:
+                                {audit.adjustedTotalCreditsForGraduation}) and double-check your ELA 30, Social Studies
+                                30, Math 20, and Science 20 pathways. Use the catalog to quick-fill requirements!</span>
+                            )}
+                        </div>
+                    </div>
+                    )}
+
+                    {/* TAB 2: DIPLOMA EXAM BLENDER */}
+                    {activeTab === 'blender' && (
+                    <div className={`rounded-2xl border p-5 space-y-4 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-white border-slate-200' }`}>
+                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <h3 className="font-extrabold text-base flex items-center gap-1.5">
+                                <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                Diploma Mark Blender (70% / 30%)
+                            </h3>
+                            <span
+                                className="text-[10px] bg-indigo-950 text-indigo-400 font-black border border-indigo-900 px-2 py-0.5 rounded">Alberta
+                                Official Split</span>
+                        </div>
+
+                        <div className="bg-slate-800/40 p-3.5 rounded-xl border border-slate-800 text-xs">
+                            <p className="text-slate-400 leading-relaxed">
+                                In Alberta, standard Grade 12 (30-level) academic courses feature a Provincial Diploma
+                                Exam. Your final blended grade consists of <strong>70% School Awarded Mark</strong> and
+                                <strong>30% Diploma Exam Mark</strong>.
+                            </p>
+                        </div>
+
+                        {/* Blender selectors */}
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1.5">Select
+                                    30-Level Course</label>
+                                <select value={blendCourse} onChange={(e)=> setBlendCourse(e.target.value)}
+                                    className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                    text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    >
+                                    <option>English Language Arts 30-1</option>
+                                    <option>English Language Arts 30-2</option>
+                                    <option>Social Studies 30-1</option>
+                                    <option>Social Studies 30-2</option>
+                                    <option>Mathematics 30-1</option>
+                                    <option>Mathematics 30-2</option>
+                                    <option>Biology 30</option>
+                                    <option>Chemistry 30</option>
+                                    <option>Physics 30</option>
+                                    <option>Science 30</option>
+                                </select>
+                            </div>
+
+                            {/* Slider 1: School Mark */}
+                            <div>
+                                <div className="flex justify-between items-center text-xs font-semibold mb-1">
+                                    <span className="text-slate-400">School Mark (70% weight):</span>
+                                    <span className="text-indigo-400 font-extrabold">{schoolMark}%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value={schoolMark} onChange={(e)=>
+                                setSchoolMark(Number(e.target.value))}
+                                className="w-full accent-indigo-500"
+                                />
+                            </div>
+
+                            {/* Slider 2: Exam Mark */}
+                            <div>
+                                <div className="flex justify-between items-center text-xs font-semibold mb-1">
+                                    <span className="text-slate-400">Exam Mark (30% weight):</span>
+                                    <span className="text-purple-400 font-extrabold">{examMark}%</span>
+                                </div>
+                                <input type="range" min="0" max="100" value={examMark} onChange={(e)=>
+                                setExamMark(Number(e.target.value))}
+                                className="w-full accent-purple-500"
+                                />
+                            </div>
+
+                            {/* Blended result gauge */}
+                            <div
+                                className="p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/40 flex flex-col items-center justify-center text-center">
+                                <span className="text-xs text-slate-400 font-bold uppercase tracking-widest">Calculated
+                                    Blended Mark</span>
+                                <span className="text-4xl font-black text-white mt-1.5">{blendedMark}%</span>
+                                <div className="mt-2.5 flex items-center gap-1.5 text-xs">
+                                    {blendedMark >= 80 ? (
+                                    <span
+                                        className="text-emerald-400 font-black flex items-center gap-1 bg-emerald-950/40 border border-emerald-900 px-2 py-0.5 rounded">
+                                        🌟 Standard of Excellence (Honors)
+                                    </span>
+                                    ) : blendedMark >= 50 ? (
+                                    <span
+                                        className="text-indigo-400 font-black flex items-center gap-1 bg-indigo-950/40 border border-indigo-900 px-2 py-0.5 rounded">
+                                        👍 Pass Standard Achieved
+                                    </span>
+                                    ) : (
+                                    <span
+                                        className="text-rose-400 font-black flex items-center gap-1 bg-rose-950/40 border border-rose-900 px-2 py-0.5 rounded">
+                                        ⚠️ Below Passing Requirement (No Credit)
+                                    </span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Target predictor */}
+                            <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/20 space-y-3">
+                                <span className="text-xs text-slate-200 font-extrabold block">🔮 Target Blended Mark
+                                    Predictor</span>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-slate-400 font-semibold">Your Target Blended
+                                        Mark:</span>
+                                    <div className="flex items-center gap-2">
+                                        <input type="number" min="50" max="100" value={targetBlended} onChange={(e)=>
+                                        setTargetBlended(Math.max(50, Math.min(100, Number(e.target.value))))}
+                                        className="w-14 text-center bg-slate-800 border border-slate-700 p-1 rounded
+                                        font-black text-xs text-white"
+                                        />
+                                        <span className="text-xs text-white font-bold">%</span>
+                                    </div>
+                                </div>
+
+                                {/* Calculation readout */}
+                                <div className="text-xs pt-1.5 border-t border-slate-800 text-slate-400">
+                                    {neededExamMark > 100 ? (
+                                    <span className="text-yellow-500 font-semibold flex items-start gap-1">
+                                        ⚠️ Mathematically impossible (requires {neededExamMark}% on the exam). Try to
+                                        boost your school awarded mark above {Math.ceil((targetBlended - 30) / 0.7)}%
+                                        first!
+                                    </span>
+                                    ) : neededExamMark <= 0 ? ( <span
+                                        className="text-emerald-400 font-semibold flex items-start gap-1">
+                                        🎉 Already secured! You can score 0% on the exam and still achieve your
+                                        {targetBlended}% target based on your {schoolMark}% school mark.
+                                        </span>
+                                        ) : (
+                                        <span>
+                                            To secure a final blended mark of <strong
+                                                className="text-slate-200">{targetBlended}%</strong>, you need to score
+                                            at least <strong
+                                                className="text-indigo-400 text-sm font-black">{neededExamMark}%</strong>
+                                            on the {blendCourse} Provincial Diploma Exam.
+                                        </span>
+                                        )}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    )}
+
+                    {/* TAB 3: UNIVERSITY / POST-SECONDARY PATHWAYS */}
+                    {activeTab === 'pathways' && (
+                    <div className={`rounded-2xl border p-5 space-y-4 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-white border-slate-200' }`}>
+                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <h3 className="font-extrabold text-base flex items-center gap-1.5">
+                                <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                Post-Secondary Pathways Audit
+                            </h3>
+                            <span className="text-xs text-slate-400 font-bold">Alberta Universities</span>
+                        </div>
+
+                        <div className="space-y-3">
+                            {pathways.map((path, idx) => (
+                            <div key={idx}
+                                className="border border-slate-800 p-3.5 rounded-xl bg-slate-900/30 space-y-2">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h4 className="font-extrabold text-xs text-slate-200">{path.name}</h4>
+                                        <p className="text-[10px] text-slate-500 mt-0.5">{path.desc}</p>
+                                    </div>
+                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase
+                                        shrink-0 ${ path.status==='Qualified'
+                                        ? 'border-emerald-800 text-emerald-400 bg-emerald-950/40' :
+                                        path.status==='In Progress'
+                                        ? 'border-indigo-800 text-indigo-400 bg-indigo-950/40'
+                                        : 'border-slate-800 text-slate-500 bg-slate-950/20' }`}>
+                                        {path.status}
+                                    </span>
+                                </div>
+
+                                <div className="text-[10px] space-y-1">
+                                    <span className="text-slate-400 font-semibold block">Key prerequisites
+                                        checked:</span>
+                                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                                        {path.reqs.map((req, rIdx) => (
+                                        <span key={rIdx}
+                                            className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[9px] font-medium border border-slate-700">
+                                            {req}
+                                        </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {path.status !== 'Qualified' && path.missing.length > 0 && (
+                                <div
+                                    className="bg-slate-900/50 p-2 rounded text-[10px] text-slate-400 border border-slate-800/40">
+                                    <strong className="text-yellow-600 block mb-0.5">Missing prerequisites:</strong>
+                                    <span className="text-slate-400">{path.missing.join(', ')}</span>
+                                </div>
+                                )}
+                            </div>
+                            ))}
+                        </div>
+                    </div>
+                    )}
+
+                    {/* TAB 4: PLANNER GUIDE / FAQ */}
+                    {activeTab === 'guide' && (
+                    <div className={`rounded-2xl border p-5 space-y-4 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-white border-slate-200' }`}>
+                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <h3 className="font-extrabold text-base flex items-center gap-1.5">
+                                <svg className="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Alberta Grad FAQ Guide
+                            </h3>
+                        </div>
+
+                        <div className="space-y-4 text-xs">
+                            <div>
+                                <h4 className="font-bold text-slate-200 mb-1">How many credits do I need to graduate?
+                                </h4>
+                                <p className="text-slate-400 leading-relaxed">
+                                    You need a minimum of 100 credits. Core academic courses (ELA, Socials, Math,
+                                    Science) are typically 5 credits each. CALM and PE 10 can be taken as 3 or 5 credit
+                                    variants.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-slate-200 mb-1">What are "Options" credits?</h4>
+                                <p className="text-slate-400 leading-relaxed">
+                                    Options include Career and Technology Studies (CTS) modules, Fine and Performing
+                                    Arts, Second Languages, Physical Education 20/30, and Registered Apprenticeship
+                                    (RAP) programs. You need at least 10 credits in this combined category.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-slate-200 mb-1">What is the "External Learning" cap?</h4>
+                                <p className="text-slate-400 leading-relaxed">
+                                    A maximum of 5 credits earned outside traditional classrooms (such as external music
+                                    credentials or special projects) can count towards your 100 graduation credit goal.
+                                    The auditor flags this automatically if you exceed it!
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-bold text-slate-200 mb-1">How are course failures handled?</h4>
+                                <p className="text-slate-400 leading-relaxed">
+                                    You must achieve a final mark of at least 50% to earn credits for high school
+                                    courses. Failing marks are highlighted in red and do not count toward your
+                                    graduation audit checklist.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    )}
+
+                </div>
+
+                </main>
+
+                {/* FOOTER */}
+                <footer
+                    className="py-8 text-center text-xs text-slate-500 border-t border-slate-800 mt-12 max-w-7xl mx-auto px-4">
+                    <p>© 2026 Albertgrad Alberta Credit Planner. All standard credit audit rules correspond with
+                        official Alberta Education high school diploma requirements.</p>
+                    <p className="mt-2 text-slate-600">Ensure to confirm all final plans with your high school academic
+                        counselor.</p>
+                </footer>
+
+                {/* MODAL: ADD / EDIT COURSE FORM */}
+                {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+                    <div className={`w-full max-w-md rounded-2xl border shadow-2xl p-6 relative animate-in fade-in
+                        zoom-in duration-150 ${theme==='dark' ? 'bg-slate-900 border-slate-800'
+                        : 'bg-white border-slate-200 text-slate-900' }`}>
+                        <button onClick={()=> setIsModalOpen(false)}
+                            className="absolute right-4 top-4 text-slate-400 hover:text-white"
+                            >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <h3 className="text-lg font-extrabold mb-4 flex items-center gap-2 text-indigo-500">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            {modalMode === 'add' ? 'Add New Custom Course' : 'Edit Course Details'}
+                        </h3>
+
+                        <form onSubmit={handleSaveCourse} className="space-y-4">
+                            {/* Course Name */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Course
+                                    Name</label>
+                                <input type="text" value={formName} onChange={(e)=> setFormName(e.target.value)}
+                                placeholder="e.g. Physics 20"
+                                className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                required
+                                />
+                            </div>
+
+                            {/* Grade Level & Credits */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Grade
+                                        Level</label>
+                                    <select value={formGrade} onChange={(e)=> setFormGrade(e.target.value)}
+                                        className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                        text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        >
+                                        <option value={10}>Grade 10</option>
+                                        <option value={11}>Grade 11</option>
+                                        <option value={12}>Grade 12</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Credits
+                                        Awarded</label>
+                                    <select value={formCredits} onChange={(e)=> setFormCredits(e.target.value)}
+                                        className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                        text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        >
+                                        <option value={1}>1 Credit (CTS)</option>
+                                        <option value={3}>3 Credits (PE/CALM)</option>
+                                        <option value={5}>5 Credits (Standard)</option>
+                                        <option value={10}>10 Credits (RAP/COOP)</option>
+                                        <option value={15}>15 Credits (RAP 35)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Category & Mark */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Audit
+                                        Category</label>
+                                    <select value={formCategory} onChange={(e)=> setFormCategory(e.target.value)}
+                                        className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                        text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        >
+                                        <option value="English">ELA Core</option>
+                                        <option value="Social Studies">Social Studies Core</option>
+                                        <option value="Mathematics">Mathematics Core</option>
+                                        <option value="Science">Science Core</option>
+                                        <option value="PE">Physical Education</option>
+                                        <option value="CALM">CALM Requirement</option>
+                                        <option value="Option">Options / Electives</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Mark
+                                        Obtained (%)</label>
+                                    <input type="number" min="0" max="100" value={formMark} onChange={(e)=>
+                                    setFormMark(e.target.value)}
+                                    placeholder="Planned"
+                                    className="w-full text-xs p-2.5 rounded-xl bg-slate-800 border border-slate-700
+                                    text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    />
+                                    <span className="text-[9px] text-slate-500">Leave blank if only planned.</span>
+                                </div>
+                            </div>
+
+                            {/* Advanced Flags */}
+                            <div className="space-y-2 pt-2 border-t border-slate-800 text-xs">
+                                <span className="font-bold text-slate-400 block mb-1">Advanced Flags</span>
+
+                                <label className="flex items-center gap-2.5 cursor-pointer">
+                                    <input type="checkbox" checked={formIs30Level} onChange={(e)=>
+                                    setFormIs30Level(e.target.checked)}
+                                    className="accent-indigo-500"
+                                    />
+                                    <span className="text-slate-300">This is a 30-Level elective course (excludes ELA &
+                                        Socials)</span>
+                                </label>
+
+                                <label className="flex items-center gap-2.5 cursor-pointer">
+                                    <input type="checkbox" checked={formIsExternal} onChange={(e)=>
+                                    setFormIsExternal(e.target.checked)}
+                                    className="accent-indigo-500"
+                                    />
+                                    <span className="text-slate-300">External learning (Work Exp, Special Project,
+                                        outside credit)</span>
+                                </label>
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="flex justify-end gap-2 pt-4 border-t border-slate-800">
+                                <button type="button" onClick={()=> setIsModalOpen(false)}
+                                    className="px-4 py-2 bg-slate-800 text-slate-300 font-bold rounded-xl text-xs
+                                    hover:bg-slate-700 transition"
+                                    >
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    className="px-5 py-2 bg-indigo-600 text-white font-bold rounded-xl text-xs hover:bg-indigo-500 shadow-md transition">
+                                    {modalMode === 'add' ? 'Add Course' : 'Save Changes'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                )}
+
+                {/* MODAL: BROWSE CATALOG MODAL */}
+                {isCatalogOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+                    <div
+                        className="w-full max-w-2xl rounded-2xl border border-slate-800 shadow-2xl p-6 bg-slate-900 relative max-h-[85vh] overflow-y-auto">
+                        <button onClick={()=> setIsCatalogOpen(false)}
+                            className="absolute right-4 top-4 text-slate-400 hover:text-white"
+                            >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <h3 className="text-lg font-black mb-1 text-indigo-500 flex items-center gap-1.5">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Alberta High School Course Catalog Library
+                        </h3>
+                        <p className="text-xs text-slate-400 mb-4">Click any course standard below to quickly deploy it
+                            to your planning board.</p>
+
+                        {/* Catalog Grade Destination selector */}
+                        <div
+                            className="flex items-center gap-3 bg-slate-950 p-2 rounded-xl mb-4 border border-slate-800">
+                            <span className="text-xs font-bold text-slate-400 pl-2 shrink-0">Add standard course
+                                to:</span>
+                            <div className="flex gap-1 flex-1">
+                                {[10, 11, 12].map(g => (
+                                <button key={g} onClick={()=> setCatalogGrade(g)}
+                                    className={`flex-1 text-center py-1 rounded text-xs font-extrabold ${catalogGrade
+                                    === g ? 'bg-indigo-600 text-white' : 'bg-slate-900 hover:bg-slate-800
+                                    text-slate-400'}`}
+                                    >
+                                    Grade {g}
+                                </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Catalog grid categories */}
+                        <div className="space-y-5">
+                            {Object.entries(PRESET_CATALOG).map(([category, courses]) => (
+                            <div key={category}>
+                                <h4
+                                    className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 border-l-2 border-indigo-500 pl-2">
+                                    {category === 'CoreReqs' ? 'Mandatory Core Electives' : `${category} Courses`}
+                                </h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                                    {courses.map((course, cIdx) => (
+                                    <button key={cIdx} onClick={()=> {
+                                        handleQuickCatalogAdd(course, catalogGrade);
+                                        }}
+                                        className="text-left p-2.5 bg-slate-950/60 border border-slate-800 rounded-xl
+                                        hover:bg-slate-800 hover:border-slate-700 transition flex flex-col
+                                        justify-between items-start text-xs gap-1 group"
+                                        >
+                                        <span
+                                            className="font-bold text-slate-200 tracking-tight group-hover:text-white">{course.name}</span>
+                                        <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                                            <span className="font-black text-indigo-400">{course.credits} Credits</span>
+                                            {course.is30Level && <span
+                                                className="text-yellow-500 font-bold">30-Level</span>}
+                                            {course.isExternal && <span
+                                                className="text-rose-400 font-bold">External</span>}
+                                        </div>
+                                    </button>
+                                    ))}
+                                </div>
+                            </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+                            <button onClick={()=> setIsCatalogOpen(false)}
+                                className="px-5 py-2 bg-slate-800 text-slate-300 font-bold rounded-xl text-xs
+                                hover:bg-slate-700"
+                                >
+                                Done Planning
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                )}
+
+                </div>
+                );
+                }
