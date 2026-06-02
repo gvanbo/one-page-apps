@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NorthStar Academy - High School Science Pathways</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Lexend -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for clean UI accents -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'federal-blue': '#151859',
+            'yellow-gold': '#e6a51c',
+            'whitesmoke': '#f5f5f5',
+            'nsa-green': '#46a447',
+            'nsa-teal': '#3e87e6',
+            'nsa-orange': '#f47400',
+            'ice-blue': '#d9eaff',
+          },
+          fontFamily: {
+            sans: ['Lexend', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Lexend', sans-serif;
+      background-color: #f8fafc;
+    }
+    .course-node {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* Accessible Hover: scale and clean drop shadow without changing background text contrast */
+    @media (hover: hover) {
+      .course-node:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 10px 20px -5px rgba(21, 24, 89, 0.15);
+      }
+    }
+    
+    /* Dynamic Pathway Visual Highlights */
+    .course-node.active-selected {
+      border-color: #e6a51c !important;
+      border-width: 3px !important;
+      box-shadow: 0 0 0 4px rgba(230, 165, 28, 0.3);
+    }
+    .course-node.prereq-optimal {
+      border-color: #151859 !important; /* Optimal Path - Deep Blue */
+      border-width: 3px !important;
+      background-color: #f0f4ff !important;
+    }
+    .course-node.prereq-secondary {
+      border-color: #93c5fd !important; /* Secondary Path - Light Blue */
+      border-width: 3px !important;
+      background-color: #f8fafc !important;
+    }
+    .course-node.next-active {
+      border-color: #46a447 !important; /* Next Unlocked Option - Green */
+      border-width: 3px !important;
+      background-color: #f2faf2 !important;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #151859;
+    }
+  </style>
+</head>
+<body class="p-0 m-0 min-h-screen flex flex-col justify-between text-slate-800">
+
+  <!-- Main Container -->
+  <div class="max-w-[1380px] w-full mx-auto bg-white shadow-2xl rounded-2xl md:rounded-3xl overflow-hidden my-0 md:my-6 border border-slate-100 flex flex-col">
+    
+    <!-- Branding Header -->
+    <div class="bg-federal-blue text-white p-6 md:p-8 relative overflow-hidden border-b-4 border-yellow-gold">
+      <!-- Decorative background design asset -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none w-1/4 max-w-[180px]">
+        <svg viewBox="0 0 100 100" class="fill-current text-white w-full h-auto">
+          <path d="M50,0 L61,39 L100,50 L61,61 L50,100 L39,61 L0,50 L39,39 Z"/>
+        </svg>
+      </div>
+      
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+        <div class="flex items-center gap-4">
+          <!-- Official School Brand Circle Logo -->
+          <img src="https://images.nsa-images.org/assets/branding/NSA-Circle.png" alt="NorthStar Academy Logo" class="w-14 h-14 md:w-20 md:h-20 object-contain shrink-0 bg-white p-1 rounded-full shadow-md">
+          <div>
+            <span class="bg-yellow-gold/20 text-yellow-gold border border-yellow-gold/30 px-3 py-0.5 rounded-full text-[10px] md:text-xs font-bold tracking-wider uppercase">Course Visualizer</span>
+            <h1 class="text-xl md:text-3xl font-black tracking-tight text-white mt-1 font-sans">Science Pathway Explorer</h1>
+            <p class="text-xs md:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Plan your high school sequence. Select any course below to dynamically trace its recommended and secondary paths.
+            </p>
+          </div>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-3 rounded-2xl hidden lg:block text-right shrink-0">
+          <div class="text-xs font-extrabold text-yellow-gold uppercase tracking-widest">NorthStar Academy</div>
+          <div class="text-[10px] text-slate-300 mt-0.5">Community of Learners,<br>Connected in Christ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friendly Instruction Bar -->
+    <div class="bg-blue-50 border-b border-blue-100 px-4 md:px-6 py-4">
+      <div class="flex items-start gap-3">
+        <div class="bg-federal-blue text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+          <i class="fa-solid fa-info"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-federal-blue leading-normal">
+            Click on any course box below to instantly visualize its optimal route (highlighted in <span class="border-b-2 border-federal-blue font-black">Deep Blue</span>) and secondary options (highlighted in <span class="border-b-2 border-blue-400 font-black">Light Blue</span>).
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-0">
+      
+      <!-- Flow Map Area (8 Columns) -->
+      <div class="xl:col-span-8 p-4 md:p-6 bg-slate-50 flex flex-col justify-between border-r border-slate-200">
+        
+        <!-- Mobile Horizontal Swipe Tip -->
+        <div class="xl:hidden flex items-center justify-between bg-yellow-gold/10 border border-yellow-gold/20 text-federal-blue text-[11px] px-3.5 py-2.5 rounded-xl mb-4 shadow-sm">
+          <span class="font-medium"><i class="fa-solid fa-left-right mr-1.5 text-yellow-gold"></i> Swipe horizontally to view full high school sequence</span>
+          <span class="animate-pulse font-bold text-yellow-gold tracking-wider text-xs">Swipe <i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+
+        <!-- Scrollable Flow Wrapper -->
+        <div class="relative overflow-x-auto min-h-[460px] pb-4">
+          
+          <!-- Column Timelines -->
+          <div class="grid grid-cols-3 gap-6 min-w-[760px] text-center font-bold text-federal-blue border-b border-slate-200 pb-3 mb-6 text-xs tracking-wider uppercase">
+            <div class="bg-federal-blue/5 py-2 rounded-xl border border-federal-blue/10"><i class="fa-solid fa-circle-right text-yellow-gold mr-1"></i> Grade 10</div>
+            <div class="bg-federal-blue/5 py-2 rounded-xl border border-federal-blue/10"><i class="fa-solid fa-angles-right text-nsa-teal mr-1"></i> 20-Level Courses</div>
+            <div class="bg-federal-blue/5 py-2 rounded-xl border border-federal-blue/10"><i class="fa-solid fa-award text-nsa-green mr-1"></i> 30-Level Courses</div>
+          </div>
+
+          <!-- Flow Grid -->
+          <div class="grid grid-cols-3 gap-x-12 gap-y-5 min-w-[760px] relative pt-2">
+            
+            <!-- ====== COLUMN 1: GRADE 10 ====== -->
+            <div class="flex flex-col gap-6 justify-start">
+              
+              <!-- Science 10 -->
+              <div id="node-sci10" class="course-node bg-white border-2 border-slate-200 p-4 rounded-xl shadow-sm cursor-pointer relative"
+                   onclick="selectCourse('sci10')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-federal-blue bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wide">Academic</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-extrabold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-base text-federal-blue mt-2">Science 10</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-normal line-clamp-2">Gateway course for physical and biological science specialties.</p>
+                <div class="absolute -right-[28px] top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none hidden md:block">
+                  <i class="fa-solid fa-arrow-right text-base"></i>
+                </div>
+              </div>
+
+              <!-- Science 14 -->
+              <div id="node-sci14" class="course-node bg-white border-2 border-slate-200 p-4 rounded-xl shadow-sm cursor-pointer relative mt-8"
+                   onclick="selectCourse('sci14')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-nsa-teal bg-teal-50 border border-teal-100 px-2 py-0.5 rounded uppercase tracking-wide">Applied Track</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-extrabold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-base text-federal-blue mt-2">Science 14</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-normal line-clamp-2">Practical science literacy with low-screen resource options.</p>
+                <div class="absolute -right-[28px] top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none hidden md:block">
+                  <i class="fa-solid fa-arrow-right text-base"></i>
+                </div>
+              </div>
+
+              <!-- Science 10-4 -->
+              <div id="node-sci10_4" class="course-node bg-white border-2 border-slate-200 p-4 rounded-xl shadow-sm cursor-pointer relative mt-8"
+                   onclick="selectCourse('sci10_4')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded uppercase tracking-wide">Workplace K&E</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-extrabold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-base text-federal-blue mt-2">Science 10-4</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-normal line-clamp-2">Practical life-skills science designed for direct workforce transition.</p>
+                <div class="absolute -right-[28px] top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none hidden md:block">
+                  <i class="fa-solid fa-arrow-right text-base"></i>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ====== COLUMN 2: 20-LEVELS ====== -->
+            <div class="flex flex-col gap-4">
+              
+              <!-- Biology 20 -->
+              <div id="node-bio20" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('bio20')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-green-700 bg-green-50 px-2 py-0.5 rounded uppercase tracking-wide">Biology</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Biology 20</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Ecosystems & Human biological systems.</p>
+              </div>
+
+              <!-- Chemistry 20 -->
+              <div id="node-chem20" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('chem20')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase tracking-wide">Chemistry</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Chemistry 20</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Bonds, aqueous solutions, & gases.</p>
+              </div>
+
+              <!-- Physics 20 -->
+              <div id="node-phys20" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('phys20')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wide">Physics</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Physics 20</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Kinematics, gravity, & mechanical energy.</p>
+              </div>
+
+              <!-- Science 20 -->
+              <div id="node-sci20" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('sci20')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded uppercase tracking-wide">Gen. Science</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Science 20</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Geology, physical sciences, & ecosystems.</p>
+              </div>
+
+              <!-- Science 24 -->
+              <div id="node-sci24" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer mt-1"
+                   onclick="selectCourse('sci24')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-orange-700 bg-orange-50 px-2 py-0.5 rounded uppercase tracking-wide">Applied</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Science 24</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Household energy, safety, & ecosystems.</p>
+              </div>
+
+              <!-- Science 20-4 -->
+              <div id="node-sci20_4" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer mt-1"
+                   onclick="selectCourse('sci20_4')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-slate-700 bg-slate-100 px-2 py-0.5 rounded uppercase tracking-wide">Workplace</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Science 20-4</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Everyday household & workplace science.</p>
+              </div>
+
+            </div>
+
+            <!-- ====== COLUMN 3: 30-LEVELS ====== -->
+            <div class="flex flex-col gap-4">
+              
+              <!-- Biology 30 -->
+              <div id="node-bio30" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('bio30')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-green-700 bg-green-50 px-2 py-0.5 rounded uppercase tracking-wide">Biology</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Biology 30</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Genetics, nervous system, & cell division.</p>
+              </div>
+
+              <!-- Chemistry 30 -->
+              <div id="node-chem30" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('chem30')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase tracking-wide">Chemistry</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Chemistry 30</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Organic chemistry & chemical equilibrium.</p>
+              </div>
+
+              <!-- Physics 30 -->
+              <div id="node-phys30" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer"
+                   onclick="selectCourse('phys30')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wide">Physics</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Physics 30</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Electromagnetism, fields, & nuclear physics.</p>
+              </div>
+
+              <!-- Science 30 -->
+              <div id="node-sci30" class="course-node bg-white border-2 border-slate-200 p-3.5 rounded-xl shadow-sm cursor-pointer relative"
+                   onclick="selectCourse('sci30')">
+                <div class="flex justify-between items-start">
+                  <span class="text-[9px] font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded uppercase tracking-wide">Universal Path</span>
+                  <span class="bg-federal-blue/10 text-federal-blue text-[10px] px-1.5 py-0.5 rounded font-bold">5 Cr</span>
+                </div>
+                <h3 class="font-extrabold text-sm text-federal-blue mt-2">Science 30 <span class="text-yellow-gold"><i class="fa-solid fa-star"></i></span></h3>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">Universal academic-transfer credential.</p>
+                <div class="absolute -top-1.5 -right-1.5 bg-yellow-gold text-federal-blue text-[10px] font-extrabold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow">❶</div>
+              </div>
+
+              <!-- Path limits -->
+              <div class="h-[100px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-4 text-center text-[11px] text-slate-400 leading-normal bg-slate-50/50">
+                Applied and Workplace pathways satisfy graduation requirements at the 20-level.
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Accessible Legend -->
+        <div class="mt-4 pt-4 border-t border-slate-200 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-slate-600 bg-white p-3.5 rounded-xl border border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-3.5 h-3.5 rounded-md border-2 border-yellow-gold bg-white"></span>
+            <span class="font-medium text-slate-700">Selected Target</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-3.5 h-3.5 rounded-md border-2 border-federal-blue bg-blue-100/40"></span>
+            <span class="font-medium text-slate-700">Optimal Path (Deep Blue)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-3.5 h-3.5 rounded-md border-2 border-blue-300 bg-slate-50"></span>
+            <span class="font-medium text-slate-700">Secondary Path (Light Blue)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-3.5 h-3.5 rounded-md border-2 border-nsa-green bg-green-50"></span>
+            <span class="font-medium text-slate-700">Unlocked Options</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Compact Visual Sidebar Column (4 Columns) -->
+      <div class="xl:col-span-4 bg-slate-50/30 p-4 md:p-6 flex flex-col justify-between xl:sticky xl:top-6 self-start">
+        
+        <!-- Interactive Detail Card -->
+        <div id="info-panel" class="space-y-4 scroll-mt-6">
+          
+          <!-- Default Instruction Card -->
+          <div id="panel-initial" class="text-center py-10 px-4 bg-white border border-slate-200 rounded-2xl shadow-sm">
+            <div class="w-12 h-12 bg-federal-blue/5 text-federal-blue/40 rounded-full flex items-center justify-center mx-auto mb-3">
+              <i class="fa-solid fa-arrow-pointer text-xl animate-bounce"></i>
+            </div>
+            <h3 class="font-bold text-federal-blue text-base">Select a Course Node</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              Click any science course on the visual map to see exact prerequisite pathways, optimal streams, and core graduation transfer details.
+            </p>
+          </div>
+
+          <!-- Active Course Details Panel (Highly Simplified and Visual) -->
+          <div id="panel-active" class="hidden bg-white border border-slate-200 rounded-2xl p-4 md:p-5 shadow-sm space-y-4">
+            
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+              <div>
+                <span id="panel-track" class="text-[9px] font-extrabold text-white bg-federal-blue px-2 py-0.5 rounded-full uppercase tracking-wider"></span>
+                <h2 id="panel-title" class="text-lg font-black text-federal-blue mt-1"></h2>
+              </div>
+              <span id="panel-credits" class="text-[11px] font-bold text-federal-blue bg-slate-100 border border-slate-200 px-2 py-1 rounded-md"></span>
+            </div>
+
+            <!-- Single Description Sentence -->
+            <div>
+              <p id="panel-desc" class="text-xs text-slate-600 leading-relaxed font-medium"></p>
+            </div>
+
+            <!-- All Possible Paths visual list -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <span class="text-[10px] font-extrabold text-federal-blue uppercase tracking-wider block mb-2">
+                <i class="fa-solid fa-route mr-1 text-federal-blue"></i> Access Pathways:
+              </span>
+              <div id="all-possible-paths-list" class="space-y-2 text-[11px] text-slate-700">
+                <!-- Javascript will inject clean, structured arrows here -->
+              </div>
+            </div>
+
+            <!-- Simple Requisite Alert Box -->
+            <div id="prereq-alert" class="p-3 rounded-lg text-xs border font-medium"></div>
+
+            <!-- Quick Outbound External CTA Links -->
+            <div class="space-y-2 pt-1 border-t border-slate-100">
+              <a href="https://www.nsaschool.ca/high-school-courses/high-school-science" target="_blank" 
+                 class="w-full bg-federal-blue hover:bg-federal-blue/95 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-graduation-cap"></i> View All Science Courses
+              </a>
+              <a href="https://www.nsaschool.ca/contact" target="_blank" 
+                 class="w-full bg-white hover:bg-slate-50 text-federal-blue border-2 border-federal-blue/20 text-xs font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-envelope"></i> Contact the School
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Supportive School Footer Widget -->
+        <div class="mt-6 bg-federal-blue text-white p-4 rounded-2xl relative overflow-hidden shadow-md">
+          <div class="relative z-10 space-y-1">
+            <h4 class="font-bold text-xs text-yellow-gold uppercase tracking-wider">Course Advising</h4>
+            <p class="text-[10px] text-slate-300 leading-relaxed">
+              Confused by science requirements? Talk directly with our academic guidance team about credits and asynchronous enrollment.
+            </p>
+            <div class="pt-2 flex gap-2">
+              <a href="https://www.nsaschool.ca/contact" target="_blank" 
+                 class="bg-yellow-gold hover:bg-yellow-gold/90 text-federal-blue text-[10px] font-black px-3.5 py-1.5 rounded-lg shadow-sm transition-all inline-block text-center flex-1">
+                Contact Office
+              </a>
+              <a href="https://www.nsaschool.ca/high-school-courses/high-school-science" target="_blank" 
+                 class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-semibold px-3.5 py-1.5 rounded-lg transition-all inline-block text-center flex-1">
+                Browse Sciences
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <footer class="max-w-[1380px] w-full mx-auto text-center py-6 text-xs text-slate-500 border-t border-slate-200/50 px-4">
+    <p>© 2026 NorthStar Academy. Alberta high school courses fully integrated with Christian worldview values.</p>
+    <div class="flex justify-center gap-4 mt-2">
+      <a href="https://www.nsaschool.ca/high-school-courses/high-school-science" target="_blank" class="hover:text-federal-blue transition-colors font-medium">All Science Courses</a>
+      <span>•</span>
+      <a href="https://www.nsaschool.ca/contact" target="_blank" class="hover:text-federal-blue transition-colors font-medium">Contact Office</a>
+    </div>
+  </footer>
+
+  <!-- Adjacency List Traversal Logic & State Engine -->
+  <script>
+    // Exact Directed Graph Schema matching the science-pathway-logic specification
+    const courses = {
+      sci10: {
+        title: "Science 10",
+        credits: "5 Credits",
+        track: "Academic Pathway",
+        desc: "Covers biology, chemistry, physics, and climate/energy systems.",
+        prereqs: "Grade 9 Science.",
+        next: ["bio20", "chem20", "phys20", "sci20", "sci24"],
+        edges: [
+          { to: "bio20", type: "optimal" },
+          { to: "chem20", type: "optimal" },
+          { to: "phys20", type: "optimal" },
+          { to: "sci20", type: "optimal" },
+          { to: "sci24", type: "secondary" }
+        ]
+      },
+      sci14: {
+        title: "Science 14",
+        credits: "5 Credits",
+        track: "Applied Pathway",
+        desc: "General chemistry, everyday physics, ecosystems, and technology.",
+        prereqs: "Grade 9 Science.",
+        next: ["sci24", "sci20_4"],
+        edges: [
+          { to: "sci24", type: "optimal" },
+          { to: "sci20_4", type: "secondary" }
+        ]
+      },
+      sci10_4: {
+        title: "Science 10-4",
+        credits: "5 Credits",
+        track: "Workplace / K&E Pathway",
+        desc: "Practical hands-on life skills and workplace safety science.",
+        prereqs: "Referral & advisory placement.",
+        next: ["sci14", "sci20_4"],
+        edges: [
+          { to: "sci20_4", type: "optimal" },
+          { to: "sci14", type: "secondary" }
+        ]
+      },
+      bio20: {
+        title: "Biology 20",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "In-depth study of energy conversions, ecosystem flow, and human biology.",
+        prereqs: "50% or higher in Science 10.",
+        next: ["bio30", "sci30"],
+        edges: [
+          { to: "bio30", type: "optimal" },
+          { to: "sci30", type: "secondary" }
+        ]
+      },
+      chem20: {
+        title: "Chemistry 20",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "Investigates atomic models, bonding, solutions, gases, and stochiometry.",
+        prereqs: "50% or higher in Science 10 and Math 10C recommended.",
+        next: ["chem30", "sci30"],
+        edges: [
+          { to: "chem30", type: "optimal" },
+          { to: "sci30", type: "secondary" }
+        ]
+      },
+      phys20: {
+        title: "Physics 20",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "Examines gravity, kinematics, dynamics, mechanical energy, and wave behavior.",
+        prereqs: "50% or higher in Science 10 and Math 10C recommended.",
+        next: ["phys30", "sci30"],
+        edges: [
+          { to: "phys30", type: "optimal" },
+          { to: "sci30", type: "secondary" }
+        ]
+      },
+      sci20: {
+        title: "Science 20",
+        credits: "5 Credits",
+        track: "General Academic",
+        desc: "Integrated geologic structures, chemical systems, space, and energy.",
+        prereqs: "50% or higher in Science 10.",
+        next: ["sci30"],
+        edges: [
+          { to: "sci30", type: "optimal" }
+        ]
+      },
+      sci24: {
+        title: "Science 24",
+        credits: "5 Credits",
+        track: "Applied Pathway",
+        desc: "Practical study of home chemistry, mechanical systems, safety, and waste.",
+        prereqs: "Science 14 (50%+), or Science 10 (40%+).",
+        next: ["sci10"],
+        edges: [
+          { to: "sci10", type: "secondary" }
+        ]
+      },
+      sci20_4: {
+        title: "Science 20-4",
+        credits: "5 Credits",
+        track: "Workplace / K&E Pathway",
+        desc: "Practical daily living skills, home maintenance safety, and life science.",
+        prereqs: "Science 10-4 or Science 14.",
+        next: ["sci24"],
+        edges: [
+          { to: "sci24", type: "secondary" }
+        ]
+      },
+      bio30: {
+        title: "Biology 30",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "Advanced studies in genetics, nervous integration, and endocrine systems.",
+        prereqs: "Biology 20.",
+        next: [],
+        edges: []
+      },
+      chem30: {
+        title: "Chemistry 30",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "Explores energy transformations, equilibrium, redox, and organic compounds.",
+        prereqs: "Chemistry 20.",
+        next: [],
+        edges: []
+      },
+      phys30: {
+        title: "Physics 30",
+        credits: "5 Credits",
+        track: "Specialty Academic",
+        desc: "Study of light, electromagnetism, atomic structure, and nuclear reactions.",
+        prereqs: "Physics 20 and Math 20-1 recommended.",
+        next: [],
+        edges: []
+      },
+      sci30: {
+        title: "Science 30",
+        credits: "5 Credits",
+        track: "Universal Academic Track",
+        desc: "Universal academic option counting directly for post-secondary admissions.",
+        prereqs: "50% or higher in Biology 20, Chemistry 20, Physics 20, or Science 20.",
+        next: [],
+        edges: []
+      }
+    };
+
+    let selectedCourseId = null;
+
+    // Helper: Traverse graph to find pathways to a target node
+    function findAllPaths(startId, targetId, currentPath = [], allPaths = []) {
+      currentPath.push(startId);
+      if (startId === targetId) {
+        allPaths.push([...currentPath]);
+      } else {
+        const node = courses[startId];
+        if (node && node.edges) {
+          node.edges.forEach(edge => {
+            if (!currentPath.includes(edge.to)) {
+              findAllPaths(edge.to, targetId, currentPath, allPaths);
+            }
+          });
+        }
+      }
+      currentPath.pop();
+      return allPaths;
+    }
+
+    // Helper: Collect optimal vs alternative pathway classifications
+    function getCategorizedPaths(targetId) {
+      const starts = ["sci10_4", "sci14", "sci10"];
+      let optimal = [];
+      let secondary = [];
+
+      starts.forEach(start => {
+        const paths = findAllPaths(start, targetId);
+        paths.forEach(p => {
+          // Check if any link in this path is marked as 'secondary'
+          let isSecondary = false;
+          for (let i = 0; i < p.length - 1; i++) {
+            const current = courses[p[i]];
+            const edge = current.edges.find(e => e.to === p[i + 1]);
+            if (edge && edge.type === 'secondary') {
+              isSecondary = true;
+              break;
+            }
+          }
+          if (isSecondary) {
+            secondary.push(p);
+          } else {
+            optimal.push(p);
+          }
+        });
+      });
+
+      return { optimal, secondary };
+    }
+
+    function highlightCourse(courseId) {
+      resetNodeStyles();
+
+      // Clear layout dimming for active tracking navigation
+      const allNodes = document.querySelectorAll('.course-node');
+      allNodes.forEach(node => node.style.opacity = '0.2');
+
+      // 1. Highlight target node
+      const targetNode = document.getElementById(`node-${courseId}`);
+      if (targetNode) {
+        targetNode.classList.add('active-selected');
+        targetNode.style.opacity = '1';
+      }
+
+      // 2. Fetch and highlight upstream prerequisite paths using our DFS categories
+      const { optimal, secondary } = getCategorizedPaths(courseId);
+      
+      // Merge all nodes involved in optimal routes
+      const optimalNodes = new Set();
+      optimal.forEach(path => path.forEach(id => optimalNodes.add(id)));
+      
+      // Merge all nodes involved in secondary routes
+      const secondaryNodes = new Set();
+      secondary.forEach(path => path.forEach(id => secondaryNodes.add(id)));
+
+      // Color-code prerequisite nodes
+      optimalNodes.forEach(id => {
+        if (id === courseId) return;
+        const node = document.getElementById(`node-${id}`);
+        if (node) {
+          node.classList.add('prereq-optimal');
+          node.style.opacity = '1';
+        }
+      });
+
+      secondaryNodes.forEach(id => {
+        if (id === courseId || optimalNodes.has(id)) return;
+        const node = document.getElementById(`node-${id}`);
+        if (node) {
+          node.classList.add('prereq-secondary');
+          node.style.opacity = '1';
+        }
+      });
+
+      // 3. Highlight directly connected children (Unlocked Options)
+      const course = courses[courseId];
+      if (course && course.next) {
+        course.next.forEach(nId => {
+          const node = document.getElementById(`node-${nId}`);
+          if (node) {
+            node.classList.add('next-active');
+            node.style.opacity = '1';
+          }
+        });
+      }
+
+      updateSidebar(courseId, optimal, secondary);
+    }
+
+    function selectCourse(courseId) {
+      if (selectedCourseId === courseId) {
+        selectedCourseId = null;
+        resetNodeStyles();
+        document.getElementById('panel-active').classList.add('hidden');
+        document.getElementById('panel-initial').classList.remove('hidden');
+        document.querySelectorAll('.course-node').forEach(node => node.style.opacity = '1');
+      } else {
+        selectedCourseId = courseId;
+        highlightCourse(courseId);
+
+        if (window.innerWidth < 1280) {
+          setTimeout(() => {
+            document.getElementById('info-panel').scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'start' 
+            });
+          }, 100);
+        }
+      }
+    }
+
+    function resetNodeStyles() {
+      document.querySelectorAll('.course-node').forEach(node => {
+        node.classList.remove('active-selected', 'prereq-optimal', 'prereq-secondary', 'next-active');
+      });
+    }
+
+    function updateSidebar(courseId, optimalPaths, secondaryPaths) {
+      const course = courses[courseId];
+      if (!course) return;
+
+      document.getElementById('panel-initial').classList.add('hidden');
+      const activePanel = document.getElementById('panel-active');
+      activePanel.classList.remove('hidden');
+
+      document.getElementById('panel-title').textContent = course.title;
+      document.getElementById('panel-track').textContent = course.track;
+      document.getElementById('panel-credits').textContent = course.credits;
+      document.getElementById('panel-desc').textContent = course.desc;
+
+      // Update requisite info box based on target course
+      const alertBox = document.getElementById('prereq-alert');
+      alertBox.className = "p-3 rounded-xl text-xs border ";
+
+      if (courseId === 'sci30') {
+        alertBox.classList.add('border-yellow-gold/30', 'bg-yellow-gold/5', 'text-federal-blue');
+        alertBox.innerHTML = `<strong><i class="fa-solid fa-star text-yellow-gold"></i> Science 30 Flex Rule:</strong> Counts as academic university matriculation. Accessible directly from any passed 20-level science course with a grade above 50%.`;
+      } else {
+        alertBox.classList.add('border-blue-100', 'bg-blue-50/50', 'text-federal-blue');
+        alertBox.innerHTML = `<strong>Required Prep:</strong> ${course.prereqs}`;
+      }
+
+      // Generate compact visual arrow paths
+      const pathsContainer = document.getElementById('all-possible-paths-list');
+      pathsContainer.innerHTML = '';
+
+      const totalPaths = optimalPaths.concat(secondaryPaths);
+
+      if (totalPaths.length === 0) {
+        const item = document.createElement('div');
+        item.className = "text-slate-400 italic text-[11px]";
+        item.innerHTML = "This is an entry-level course. Start here directly from Grade 9.";
+        pathsContainer.appendChild(item);
+      } else {
+        totalPaths.forEach((path, idx) => {
+          const pathDiv = document.createElement('div');
+          pathDiv.className = "flex items-center flex-wrap gap-1 leading-none py-1 border-b border-slate-100 last:border-0";
+          
+          const pathLabels = path.map(id => {
+            const isTarget = id === courseId;
+            return `<span class="${isTarget ? 'text-yellow-gold font-bold' : 'text-slate-600 font-medium'}">${courses[id].title}</span>`;
+          }).join(' <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mx-0.5"></i> ');
+
+          // Trace badge for path classification (Optimal vs Alternative)
+          const isOptimalPath = idx < optimalPaths.length;
+          const badge = isOptimalPath 
+            ? `<span class="bg-federal-blue text-[8px] font-extrabold text-white px-1.5 py-0.5 rounded mr-1 tracking-wider uppercase shrink-0">Optimal</span>`
+            : `<span class="bg-blue-300 text-[8px] font-extrabold text-federal-blue px-1.5 py-0.5 rounded mr-1 tracking-wider uppercase shrink-0">Alternative</span>`;
+
+          pathDiv.innerHTML = `${badge} <div class="flex items-center flex-wrap">${pathLabels}</div>`;
+          pathsContainer.appendChild(pathDiv);
+        });
+      }
+    }
+
+    function filterPath(category) {
+      selectedCourseId = null;
+      resetNodeStyles();
+      document.getElementById('panel-active').classList.add('hidden');
+      document.getElementById('panel-initial').classList.remove('hidden');
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-slate-700 hover:bg-slate-50 border border-slate-300";
+      });
+
+      const activeBtn = document.getElementById(`btn-${category}`);
+      if (activeBtn) {
+        activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-federal-blue text-white shadow-sm border border-federal-blue";
+      }
+
+      document.querySelectorAll('.course-node').forEach(node => node.style.opacity = '1');
+
+      if (category === 'stem') {
+        fadeOutExcept(['sci10', 'chem20', 'phys20', 'chem30', 'phys30']);
+      } else if (category === 'health') {
+        fadeOutExcept(['sci10', 'bio20', 'chem20', 'bio30', 'sci30']);
+      } else if (category === 'general') {
+        fadeOutExcept(['sci10', 'sci20', 'sci30', 'bio20', 'chem20', 'phys20']);
+      } else if (category === 'workplace') {
+        fadeOutExcept(['sci14', 'sci24', 'sci10_4', 'sci20_4']);
+      }
+    }
+
+    function fadeOutExcept(idsToKeep) {
+      document.querySelectorAll('.course-node').forEach(node => {
+        const id = node.id.replace('node-', '');
+        if (!idsToKeep.includes(id)) {
+          node.style.opacity = '0.2';
+        } else {
+          node.style.opacity = '1';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

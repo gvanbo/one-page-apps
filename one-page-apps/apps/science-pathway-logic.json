@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Alberta Senior High School Science Graph Map",
+  "metadata": {
+    "source": "https://curriculum.learnalberta.ca/parents/en/grade/hs/sci",
+    "format": "Adjacency List (Directed Graph)",
+    "intended_use": "Pathfinding, route validation, and state-tracking in SPAs"
+  },
+  "graph": {
+    "SCI10_4": {
+      "id": "SCI10_4",
+      "name": "Science 10-4",
+      "level": 10,
+      "stream": "Knowledge & Employability",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "SCI20_4",
+          "type": "typical",
+          "description": "Standard stream progression"
+        },
+        {
+          "to": "SCI14",
+          "type": "upgrade",
+          "description": "Horizontal stream bridge"
+        }
+      ]
+    },
+    "SCI14": {
+      "id": "SCI14",
+      "name": "Science 14",
+      "level": 10,
+      "stream": "General Non-Academic",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "SCI24",
+          "type": "typical",
+          "description": "Standard stream progression"
+        },
+        {
+          "to": "SCI10",
+          "type": "upgrade",
+          "description": "Upward academic bridge"
+        }
+      ]
+    },
+    "SCI10": {
+      "id": "SCI10",
+      "name": "Science 10",
+      "level": 10,
+      "stream": "Academic",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "BIO20",
+          "type": "typical",
+          "description": "Specialization branch"
+        },
+        {
+          "to": "CHEM20",
+          "type": "typical",
+          "description": "Specialization branch"
+        },
+        {
+          "to": "PHYS20",
+          "type": "typical",
+          "description": "Specialization branch"
+        },
+        {
+          "to": "SCI20",
+          "type": "typical",
+          "description": "General academic branch"
+        },
+        {
+          "to": "SCI24",
+          "type": "lateral",
+          "description": "Alternative track reassignment"
+        }
+      ]
+    },
+    "SCI20_4": {
+      "id": "SCI20_4",
+      "name": "Science 20-4",
+      "level": 20,
+      "stream": "Knowledge & Employability",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "SCI24",
+          "type": "upgrade",
+          "description": "Upward stream bridge"
+        }
+      ]
+    },
+    "SCI24": {
+      "id": "SCI24",
+      "name": "Science 24",
+      "level": 20,
+      "stream": "General Non-Academic",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "SCI10",
+          "type": "upgrade",
+          "description": "Academic stream upgrade path"
+        }
+      ]
+    },
+    "BIO20": {
+      "id": "BIO20",
+      "name": "Biology 20",
+      "level": 20,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "BIO30",
+          "type": "typical",
+          "description": "Standard continuous progression"
+        },
+        {
+          "to": "SCI30",
+          "type": "alternative_endpoint",
+          "prerequisite_condition": ">= 50%"
+        }
+      ]
+    },
+    "CHEM20": {
+      "id": "CHEM20",
+      "name": "Chemistry 20",
+      "level": 20,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "CHEM30",
+          "type": "typical",
+          "description": "Standard continuous progression"
+        },
+        {
+          "to": "SCI30",
+          "type": "alternative_endpoint",
+          "prerequisite_condition": ">= 50%"
+        }
+      ]
+    },
+    "PHYS20": {
+      "id": "PHYS20",
+      "name": "Physics 20",
+      "level": 20,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": [
+        {
+          "to": "PHYS30",
+          "type": "typical",
+          "description": "Standard continuous progression"
+        },
+        {
+          "to": "SCI30",
+          "type": "alternative_endpoint",
+          "prerequisite_condition": ">= 50%"
+        }
+      ]
+    },
+    "SCI20": {
+      "id": "SCI20",
+      "name": "Science 20",
+      "level": 20,
+      "stream": "General Academic",
+      "credits": 5,
+      "adjacent_edges": [
+        { "to": "SCI30", "type": "typical", "prerequisite_condition": ">= 50%" }
+      ]
+    },
+    "BIO30": {
+      "id": "BIO30",
+      "name": "Biology 30",
+      "level": 30,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": []
+    },
+    "CHEM30": {
+      "id": "CHEM30",
+      "name": "Chemistry 30",
+      "level": 30,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": []
+    },
+    "PHYS30": {
+      "id": "PHYS30",
+      "name": "Physics 30",
+      "level": 30,
+      "stream": "Academic Specialization",
+      "credits": 5,
+      "adjacent_edges": []
+    },
+    "SCI30": {
+      "id": "SCI30",
+      "name": "Science 30",
+      "level": 30,
+      "stream": "General Academic",
+      "credits": 5,
+      "adjacent_edges": []
+    }
+  }
+}
