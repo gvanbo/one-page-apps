@@ -1,0 +1,685 @@
+/*************************** Font Face Section *****************************/
+@each $weight, $style,
+  $suffix
+    in (
+      (100, normal, Thin),
+      (200, normal, ExtraLight),
+      (300, normal, Light),
+      (400, normal, Regular),
+      (500, normal, Medium),
+      (600, normal, SemiBold),
+      (700, normal, Bold),
+      (800, normal, ExtraBold),
+      (900, normal, Black),
+      (400, italic, Italic),
+      (700, italic, BoldItalic),
+      (900, italic, BlackItalic)
+    )
+{
+  @font-face {
+    font-family: "Lexend";
+    src: url("https://images.nsa-images.org/Lexend/static/Lexend-#{$suffix}.ttf")
+      format("truetype");
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+
+/*************************** Variables Section *****************************/
+// Core color palette
+$federal-blue: #151859 !default;
+$yellow: #e6a51c !default;
+$whitesmoke: #f5f5f5 !default;
+$green: #46a447 !default;
+$dark-yellow: #a99306 !default;
+$bright-yellow: #f4e031 !default;
+$pink: #f66e92 !default;
+$indigo: #777aa4 !default;
+$purple: #4d3257 !default;
+$teal: #3e87e6 !default;
+$red: #ef121b !default;
+$orange: #f47400 !default;
+$black: black !default;
+$white: white !default;
+$iceBlue: #d9eaff !default;
+$turquoise: #007bff !default;
+
+// Computed color variations
+$primary-light: lighten($federal-blue, 20%) !default;
+$primary-dark: darken($federal-blue, 10%) !default;
+$light-darker: darken($whitesmoke, 15%) !default;
+$warning-dark: darken($yellow, 20%) !default;
+$teal-darker: darken($teal, 20%) !default;
+$purple-darker: darken($purple, 20%) !default;
+$light-gray: darken($whitesmoke, 20%) !default;
+
+// Legacy variable aliases
+$dark-blue: $federal-blue;
+$light-blue: $teal;
+$dark-text: $federal-blue;
+$light-text: $whitesmoke;
+$border-color: $federal-blue;
+
+// Bootstrap-compatible variables
+$primary: $federal-blue !default;
+$secondary: $teal-darker !default;
+$success: $green !default;
+$info: $teal !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $whitesmoke !default;
+$dark: $black !default;
+
+// Component-specific variables
+$fa-default-color: $dark-yellow !default;
+$course-content-maxwidth: 92% !default;
+$right-drawer-width: 400px !default;
+$right-drawer-width-mobile: 300px !default;
+$button-bg: $white !default;
+
+// Layout and spacing
+$border-radius: 5px !default;
+$box-border: 1px solid $black !default;
+$box-bg-color: #f2f2f2 !default;
+$box-padding: 2em !default;
+$content-padding: 15px !default;
+$icon-max-width: 175px !default;
+$small-icon-width: 40px !default;
+$icon-margin: 10px !default;
+$transition-duration: 0.3s !default;
+$focus-outline-width: 2px !default;
+$focus-outline-offset: 2px !default;
+
+// Activity icon filters
+$activity-icon-administration-filter: invert(45%) sepia(46%) saturate(3819%)
+  hue-rotate(260deg) brightness(101%) contrast(87%) !default;
+$activity-icon-assessment-filter: invert(36%) sepia(98%) saturate(6969%)
+  hue-rotate(315deg) brightness(90%) contrast(119%) !default;
+$activity-icon-collaboration-filter: invert(25%) sepia(54%) saturate(6226%)
+  hue-rotate(245deg) brightness(100%) contrast(102%) !default;
+$activity-icon-communication-filter: invert(48%) sepia(74%) saturate(4887%)
+  hue-rotate(11deg) brightness(102%) contrast(101%) !default;
+$activity-icon-content-filter: invert(51%) sepia(88%) saturate(359%)
+  hue-rotate(71deg) brightness(91%) contrast(82%) !default;
+$activity-icon-interactivecontent-filter: invert(25%) sepia(63%) saturate(1152%)
+  hue-rotate(344deg) brightness(94%) contrast(91%) !default;
+
+/*************************** Import Section *****************************/
+@import "fontawesome";
+@import "bootstrap";
+@import "moodle";
+
+/*************************** Mixins *****************************/
+@mixin button-styles($border-color) {
+  background-color: $button-bg;
+  border: 2px solid $border-color;
+  color: $border-color;
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: background-color $transition-duration ease, color $transition-duration ease, box-shadow $transition-duration ease;
+
+  &:hover {
+    border-color: darken($border-color, 30%);
+    box-shadow: none;
+  }
+
+  &:focus {
+    outline: $focus-outline-width solid lighten($border-color, 30%);
+    outline-offset: $focus-outline-offset;
+  }
+}
+
+// Mixin for content boxes with consistent styling
+@mixin content-box-base {
+  border: $box-border;
+  background-color: $box-bg-color;
+  border-radius: $border-radius;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+// Mixin for centered responsive images
+@mixin centered-responsive-image($max-width: $icon-max-width) {
+  max-width: $max-width;
+  width: 100%;
+  display: block;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Mixin for focus styles
+@mixin focus-outline($color: $teal, $width: $focus-outline-width, $offset: $focus-outline-offset) {
+  outline: $width solid $color;
+  outline-offset: $offset;
+}
+
+/*************************** Base Styles *****************************/
+html {
+  font: 100%/1.15em "Lexend", sans-serif;
+}
+
+body {
+  font-family: "Lexend", sans-serif;
+  color: $dark;
+}
+
+// Link styles with accessibility
+a {
+  color: $info;
+  text-decoration: none;
+
+  &:visited {
+    color: $purple-darker;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:hover,
+  &:focus {
+    color: $info;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    @include focus-outline($info);
+  }
+}
+
+// Icon styles
+.iText,
+.largeIcon,
+.medIcon,
+icon {
+  color: $dark-yellow;
+}
+
+.largeIcon {
+  font-size: 4rem;
+}
+
+.medIcon {
+  font-size: 3rem;
+}
+
+/*************************** Component Styles *****************************/
+// Navigation
+nav[aria-label="Site navigation"] {
+  background-color: $primary !important;
+
+  .nav-link,
+  .navbar-brand,
+  #lang-menu-toggle,
+  .login a,
+  .input-group label {
+    color: $white !important;
+  }
+
+  .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+    background-color: $dark-yellow;
+  }
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: $white;
+    outline: 0.5px solid $dark-yellow;
+  }
+
+  .iText,
+  .largeIcon,
+  .medIcon {
+    color: $white !important;
+  }
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
+  background-color: $dark-yellow !important;
+  text-decoration: none !important;
+  color: $white !important;
+}
+
+.navbar-toggler {
+  background-color: $dark-yellow !important;
+}
+
+// Course content
+.course-content {
+  max-width: $course-content-maxwidth;
+  margin: 0 auto;
+  padding: 0 $icon-margin;
+}
+
+/*************************** Legacy Template Styles *****************************/
+.template {
+  h1 {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  h2 {
+    font-weight: bold;
+    text-align: left;
+  }
+
+  h3 {
+    font-weight: bold;
+    font-style: italic;
+    text-align: left;
+  }
+}
+
+/*************************** Legacy PBR Styles *****************************/
+.PBRcolumns-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.PBRcolumn {
+  flex-basis: 23%;
+  margin-right: 2%;
+  box-sizing: border-box;
+  padding: $icon-margin;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+//Legacy NSA Background Styles
+.DarkBlue,
+.LightBlue,
+.Yellow,
+.BrightYellow,
+.Orange,
+.iceBlue,
+.turquoise,
+.Indigo {
+  padding: $content-padding;
+
+  &.DarkBlue {
+    background-color: $primary;
+    color: $whitesmoke;
+  }
+
+  &.LightBlue {
+    background-color: $teal;
+    color: $black;
+  }
+
+  &.Yellow {
+    background-color: $yellow;
+    color: $primary;
+  }
+
+  &.BrightYellow {
+    background-color: $bright-yellow;
+    color: $primary-dark;
+  }
+
+  &.Orange {
+    background-color: $orange;
+    color: $primary-dark;
+  }
+
+  &.Indigo {
+    background-color: $indigo;
+    color: $whitesmoke;
+  }
+
+  //K Brown Custom Colors
+  &.turquoise {
+    background-color: $turquoise;
+    color: $whitesmoke;
+  }
+
+  &.iceBlue {
+    background-color: $iceBlue;
+    color: $dark-text;
+  }
+}
+
+// Legacy layout
+.wrap {
+  width: 100%;
+  max-width: contain;
+  overflow-wrap: break-word;
+}
+
+.lessonWrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1em;
+  max-width: contain;
+  width: 100%;
+  -webkit-box-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+}
+
+.pbrBorder {
+  @include content-box-base;
+  padding: $box-padding;
+  margin-right: $content-padding;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.pbrWide {
+  @include content-box-base;
+  padding: 1em;
+}
+
+/*************************** Bootstrap 4 Optimized Classes (Priority) *****************************/
+.bsLessonWrap {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  overflow-wrap: break-word;
+
+  .row {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.bsContentBox {
+  @include content-box-base;
+  padding: $box-padding;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  box-sizing: border-box;
+  height: 100%;
+
+  .col:first-child & {
+    margin-left: 0;
+  }
+
+  .col:last-child & {
+    margin-right: 0;
+  }
+}
+
+.bsContentWide {
+  @include content-box-base;
+  padding: $box-padding;
+}
+
+.bsAvoidBreak {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/*************************** Button Styles *****************************/
+@each $type,
+  $color
+    in (
+      primary: $primary,
+      warning: $warning,
+      success: $success,
+      danger: $danger,
+      info: $info,
+      secondary: $secondary
+    )
+{
+  .btn-#{$type} {
+    @include button-styles($color);
+  }
+}
+
+/*************************** Image Utilities *****************************/
+.pbr-centered-icon {
+  display: block;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pbr-icon_header {
+  width: 25%;
+}
+
+.pbr-icon_img .pbr-icon,
+.pbr-icon {
+  @include centered-responsive-image($icon-max-width); // Never exceed 175px, responsive: scales down as needed
+}
+
+.pbr-float-left-sm_img {
+  width: $small-icon-width;
+  float: left;
+  margin-right: $icon-margin;
+  height: auto;
+  display: block;
+}
+
+.centered-icon {
+  @include centered-responsive-image($icon-max-width);
+}
+
+.image-left {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-right {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/*************************** Drawer Layout *****************************/
+.drawer-right {
+  width: $right-drawer-width !important;
+  max-width: $right-drawer-width !important;
+}
+
+.region-main-width {
+  margin-right: $right-drawer-width !important;
+  transition: margin-right $transition-duration ease-in-out;
+}
+
+body.drawer-open-right .region-main-width {
+  margin-right: $right-drawer-width !important;
+}
+
+body:not(.drawer-open-right) .region-main-width {
+  margin-right: 0 !important;
+}
+
+// Default drawer open for courses and dashboard
+body.pagelayout-course,
+body.pagelayout-mydashboard,
+body.pagelayout-dashboard {
+  .drawer-right {
+    transform: translateX(0) !important;
+  }
+
+  .region-main-width {
+    margin-right: $right-drawer-width !important;
+  }
+}
+
+/*************************** Print Utilities *****************************/
+.next-page,
+.cont {
+  display: none;
+  max-height: 0;
+}
+
+/*************************** Print Styles *****************************/
+@media print {
+  @page {
+    margin: 0.75in;
+    size: letter;
+  }
+
+  // Legacy print styles
+  .page-break-before {
+    display: block;
+    page-break-before: always;
+  }
+
+  .next-page,
+  .page-break-after {
+    display: block;
+    page-break-after: always;
+    max-height: auto;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  .cont {
+    display: block;
+    max-height: auto;
+    margin-top: 1.25rem; // 20px converted to rem
+    clear: both;
+  }
+
+  // Bootstrap print styles
+  .bsLessonWrap {
+    display: block !important;
+    width: 100% !important;
+
+    .row {
+      display: -webkit-box !important;
+      display: -ms-flexbox !important;
+      display: flex !important;
+      -webkit-box-flex-wrap: wrap !important;
+      -ms-flex-wrap: wrap !important;
+      flex-wrap: wrap !important;
+      page-break-inside: avoid;
+      margin-bottom: 1rem;
+    }
+
+    .col,
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4,
+    .col-5,
+    .col-6,
+    .col-7,
+    .col-8,
+    .col-9,
+    .col-10,
+    .col-11,
+    .col-12 {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .col-3 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 25%;
+      flex: 0 0 25% !important;
+      max-width: 25% !important;
+    }
+    .col-6 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 50%;
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+    }
+    .col-9 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 75%;
+      flex: 0 0 75% !important;
+      max-width: 75% !important;
+    }
+    .col-12 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 100%;
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+
+    .shadow,
+    .shadow-sm,
+    .shadow-lg {
+      box-shadow: none !important;
+    }
+
+    .mt-3,
+    .my-3 {
+      margin-top: 1rem !important;
+    }
+    .mb-3,
+    .my-3 {
+      margin-bottom: 1rem !important;
+    }
+    .p-3 {
+      padding: 1rem !important;
+    }
+  }
+
+  .bsContentBox,
+  .bsContentWide {
+    background-color: white !important;
+    border: 1px solid #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 1rem;
+  }
+
+  .bsAvoidBreak {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  // Universal print background reset
+  html,
+  body,
+  .pbrBorder,
+  .pbrWide,
+  .bsContentBox,
+  .bsContentWide,
+  .bsLessonWrap {
+    background-color: white !important;
+  }
+
+  .Indigo {
+    background-color: #4b0082 !important;
+  }
+}
+
+/*************************** Responsive Design *****************************/
+@media (max-width: 768px) {
+  .drawer-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative;
+    margin-top: 1.25rem; // 20px converted to rem
+  }
+
+  .region-main-width {
+    margin-right: 0 !important;
+  }
+
+  body.drawer-open-right .region-main-width,
+  body:not(.drawer-open-right) .region-main-width {
+    margin-right: 0 !important;
+  }
+}

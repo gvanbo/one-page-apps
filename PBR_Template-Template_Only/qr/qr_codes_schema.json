@@ -1,0 +1,41 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QR Code Data Schema",
+  "description": "Schema for a list of QR code generation data objects",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["url", "title", "filename"],
+    "properties": {
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "description": "The URL to encode in the QR code."
+      },
+      "title": {
+        "type": "string",
+        "description": "The title to display below the QR code."
+      },
+      "logo_name": {
+        "type": "string",
+        "description": "Optional: The filename of the logo to embed. Must be one of the allowed logo files.",
+        "enum": [
+          "brainpop_logo.png",
+          "google_logo.png",
+          "loom_logo.png",
+          "moodle_logo.png",
+          "nsa-star-logo.png",
+          "youtube_logo.png",
+          ""
+        ],
+        "default": ""
+      },
+      "filename": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9_.-]+\\.png$",
+        "description": "The output filename for the generated QR code image (must end with .png)."
+      }
+    },
+    "additionalProperties": false
+  }
+}

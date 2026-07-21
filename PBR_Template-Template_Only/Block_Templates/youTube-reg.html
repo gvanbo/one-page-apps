@@ -1,0 +1,31 @@
+<div class="col mb-4">
+  <div class="bsContentBox shadow h-100 p-3">
+    <h3>Watch</h3>
+    <div class="d-flex justify-content-center align-items-center flex-wrap">
+      <img
+        src="https://images.nsa-images.org/assets/icons/Watch-PC.svg"
+        alt="Watch icon"
+        width="90"
+        class="pbr-icon_img mb-2"
+      />
+      <a href="{{video_url}}" target="_blank" rel="noopener" aria-label="Open video">
+        <img src="{{video_qr}}" alt="QR code for video" width="120" class="pbr-icon_img" />
+      </a>
+    </div>
+    <p class="mt-2">{{video_description}}</p>
+    <hr class="w-75 mx-auto" />
+    <div class="form-text">
+      <b>Need help?</b>
+      <ul class="list-unstyled mt-1 mb-0">
+        <li>
+          <b>Link:</b>
+          <code>{{video_url}}</code>
+        </li>
+        <li>
+          <b>Search:</b>
+          "{{video_search_title}}" by "{{video_channel}}"
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,684 @@
+/**************************** NSA Mixins CSS *****************************/
+/* External stylesheet for Moodle Books and standalone environments */
+/* Compatible with NSA Theme SCSS v2.0 - Optimized with best practices */
+/*************************** Font Face Section *****************************/
+/*Get Lexend from R2 Bucket*/
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Lexend";
+  src: url("https://images.nsa-images.org/Lexend/static/Lexend-BlackItalic.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
+/*************************** Base Typography *****************************/
+html {
+  font:
+    100%/1.15em "Lexend",
+    sans-serif;
+}
+
+body {
+  font-family: "Lexend", sans-serif;
+  color: #000000;
+}
+
+/*************************** Color Variables (CSS Custom Properties) *****************************/
+:root {
+  --federal-blue: #151859;
+  --yellow: #e6a51c;
+  --whitesmoke: #f5f5f5;
+  --green: #46a447;
+  --dark-yellow: #a99306;
+  --bright-yellow: #f4e031;
+  --teal: #3e87e6;
+  --red: #ef121b;
+  --orange: #f47400;
+  --ice-blue: #d9eaff;
+  --turquoise: #007bff;
+  --black: #000000;
+  --white: #ffffff;
+  /* Layout and spacing variables */
+  --border-radius: 5px;
+  --box-padding: 2em;
+  --content-padding: 15px;
+  --icon-max-width: 175px;
+  --small-icon-width: 40px;
+  --icon-margin: 10px;
+  --transition-duration: 0.3s;
+  /* Legacy support */
+  --light-blue-legacy: #75a7bd;
+}
+
+/*************************** Background Color Classes *****************************/
+/* Updated to match SCSS theme structure with legacy fallbacks */
+.DarkBlue {
+  background-color: var(--federal-blue);
+  color: var(--whitesmoke);
+  padding: var(--content-padding);
+}
+
+.LightBlue {
+  background-color: var(--teal);
+  color: var(--black);
+  padding: var(--content-padding);
+}
+
+/* Legacy LightBlue support for published courses */
+.LightBlue.legacy {
+  background-color: var(--light-blue-legacy);
+  color: var(--black);
+  padding: 10px;
+}
+
+.Yellow {
+  background-color: var(--yellow);
+  color: var(--federal-blue);
+  padding: var(--content-padding);
+}
+
+.BrightYellow {
+  background-color: var(--bright-yellow);
+  color: var(--federal-blue);
+  padding: var(--content-padding);
+}
+
+.Orange {
+  background-color: var(--orange);
+  color: var(--federal-blue);
+  padding: var(--content-padding);
+}
+
+.iceBlue {
+  background-color: var(--ice-blue);
+  color: var(--federal-blue);
+  padding: var(--content-padding);
+}
+
+.turquoise {
+  background-color: var(--turquoise);
+  color: var(--whitesmoke);
+  padding: var(--content-padding);
+}
+
+.Indigo {
+  background-color: #4b0082; /* Indigo color */
+  color: var(--whitesmoke);
+  padding: var(--content-padding);
+}
+
+/*************************** K.Brown Template Classes *************************/
+.template h1 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.template h2 {
+  font-weight: bold;
+  text-align: left;
+}
+
+.template h3 {
+  font-weight: bold;
+  font-style: italic;
+  text-align: left;
+}
+
+/*************************** Icon Classes *****************************/
+.largeIcon,
+.medIcon,
+.iText {
+  color: var(--dark-yellow);
+}
+
+.largeIcon {
+  font-size: 4rem;
+}
+
+.medIcon {
+  font-size: 3rem;
+}
+
+/*************************** Legacy PBR Layout Classes *****************************/
+/* Maintain formatting from old PBR courses - OPTIMIZED with vendor prefixes */
+.PBRcolumns-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.PBRcolumn {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 23%;
+  flex-basis: 23%;
+  margin-right: 2%;
+  box-sizing: border-box;
+  padding: var(--icon-margin);
+}
+
+.PBRcolumn:last-child {
+  margin-right: 0;
+}
+
+.wrap {
+  width: 100%;
+  max-width: contain;
+  overflow-wrap: break-word;
+}
+
+.lessonWrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1em;
+  max-width: contain;
+  width: 100%;
+  -webkit-box-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+}
+
+.pbrBorder {
+  border: 1px solid var(--black);
+  background-color: #f2f2f2;
+  border-radius: var(--border-radius);
+  padding: var(--box-padding);
+  margin-right: var(--content-padding);
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 200px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.pbrBorder:last-child {
+  margin-right: 0;
+}
+
+.pbrWide {
+  border: 1px solid var(--black);
+  background-color: #f2f2f2;
+  border-radius: var(--border-radius);
+  padding: 1em;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/*************************** Bootstrap 4 Optimized Classes (Priority) *****************************/
+/* These classes are highly valued and recommended for future content */
+.bsLessonWrap {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+.bsLessonWrap .row {
+  margin-bottom: 1rem;
+}
+
+.bsLessonWrap .row:last-child {
+  margin-bottom: 0;
+}
+
+.bsContentBox {
+  border: 1px solid var(--black);
+  background-color: #f2f2f2;
+  border-radius: var(--border-radius);
+  padding: var(--box-padding);
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  box-sizing: border-box;
+  height: 100%;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Remove margins for proper Bootstrap grid alignment */
+.col:first-child .bsContentBox {
+  margin-left: 0;
+}
+
+.col:last-child .bsContentBox {
+  margin-right: 0;
+}
+
+.bsContentWide {
+  border: 1px solid var(--black);
+  background-color: #f2f2f2;
+  border-radius: var(--border-radius);
+  padding: var(--box-padding);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.bsAvoidBreak {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/*************************** Image Utilities - OPTIMIZED *****************************/
+/* PBR Icon Classes - Consolidated and optimized */
+.pbr-img .pbr-icon_header .pbr-icon_img,
+.pbr-icon {
+  display: block;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--border-radius);
+}
+
+.pbr-icon_header {
+  width: 25%;
+}
+
+/* Consolidated pbr-icon classes with consistent max-width */
+.pbr-icon_img .pbr-icon,
+.pbr-icon {
+  max-width: var(--icon-max-width); /* Never exceed 175px */
+  width: 100%; /* Responsive: scales down as needed */
+}
+
+.pbr-float-left-sm_img {
+  width: var(--small-icon-width);
+  float: left;
+  margin-right: var(--icon-margin);
+  height: auto;
+  display: block;
+}
+
+/* Enhanced centered icon class - OPTIMIZED */
+.centered-icon {
+  display: block;
+  max-width: var(--icon-max-width);
+  width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Legacy centered-icon support for published courses */
+.centered-icon.legacy {
+  display: block;
+  width: 175px;
+  height: 175px;
+  max-width: fit-content;
+}
+
+/* New recommended icon class */
+.icon_img {
+  display: block;
+  max-width: var(--icon-max-width);
+  width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Float utility classes */
+.image-left {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-right {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-center {
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/*************************** Utility Classes *****************************/
+.text-primary {
+  color: var(--federal-blue);
+}
+
+/* Print utility classes */
+.next-page,
+.cont {
+  display: none;
+  max-height: 0;
+}
+
+/*************************** Button Classes - OPTIMIZED *****************************/
+/* Basic button styling for standalone environments with consistent variables */
+.btn-primary {
+  background-color: var(--white);
+  border: 2px solid var(--federal-blue);
+  color: var(--federal-blue);
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-duration) ease;
+}
+
+.btn-primary:hover {
+  border-color: #0f1142;
+  box-shadow: none;
+}
+
+.btn-warning {
+  background-color: var(--white);
+  border: 2px solid var(--yellow);
+  color: var(--yellow);
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-duration) ease;
+}
+
+.btn-warning:hover {
+  border-color: #b8840e;
+  box-shadow: none;
+}
+
+.btn-success {
+  background-color: var(--white);
+  border: 2px solid var(--green);
+  color: var(--green);
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-duration) ease;
+}
+
+.btn-success:hover {
+  border-color: #357a35;
+  box-shadow: none;
+}
+
+/*************************** Print Styles - OPTIMIZED *****************************/
+@media print {
+  /* Page setup */
+  @page {
+    margin: 0.75in;
+    size: letter;
+  }
+  /* Legacy print styles */
+  .page-break-before {
+    display: block;
+    page-break-before: always;
+  }
+  .next-page,
+  .page-break-after {
+    display: block;
+    page-break-after: always;
+    max-height: auto;
+  }
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+  .cont {
+    display: block;
+    max-height: auto;
+    margin-top: 1.25rem; /* Optimized: rem instead of px */
+  }
+  /* Bootstrap print behavior - OPTIMIZED with vendor prefixes */
+  .bsLessonWrap {
+    display: block !important;
+    width: 100% !important;
+  }
+  .bsLessonWrap .row {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-flex-wrap: wrap !important;
+    -ms-flex-wrap: wrap !important;
+    flex-wrap: wrap !important;
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+  .bsLessonWrap .col,
+  .bsLessonWrap .col-1,
+  .bsLessonWrap .col-2,
+  .bsLessonWrap .col-3,
+  .bsLessonWrap .col-4,
+  .bsLessonWrap .col-5,
+  .bsLessonWrap .col-6,
+  .bsLessonWrap .col-7,
+  .bsLessonWrap .col-8,
+  .bsLessonWrap .col-9,
+  .bsLessonWrap .col-10,
+  .bsLessonWrap .col-11,
+  .bsLessonWrap .col-12 {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Bootstrap column sizing for print - OPTIMIZED with vendor prefixes */
+  .bsLessonWrap .col-3 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+  }
+  .bsLessonWrap .col-6 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+  .bsLessonWrap .col-9 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75% !important;
+    max-width: 75% !important;
+  }
+  .bsLessonWrap .col-12 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  /* Content box print styles */
+  .bsContentBox,
+  .bsContentWide {
+    background-color: white !important;
+    border: 1px solid #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 1rem;
+  }
+  .bsAvoidBreak {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  /* Remove shadows in print */
+  .bsLessonWrap .shadow,
+  .bsLessonWrap .shadow-sm,
+  .bsLessonWrap .shadow-lg {
+    box-shadow: none !important;
+  }
+  /* Bootstrap spacing utilities */
+  .bsLessonWrap .mt-3,
+  .bsLessonWrap .my-3 {
+    margin-top: 1rem !important;
+  }
+  .bsLessonWrap .mb-3,
+  .bsLessonWrap .my-3 {
+    margin-bottom: 1rem !important;
+  }
+  .bsLessonWrap .p-3 {
+    padding: 1rem !important;
+  }
+  /* Universal print background reset */
+  html,
+  body,
+  .pbrBorder,
+  .pbrWide,
+  .wrap,
+  .lessonWrap,
+  .bsContentBox,
+  .bsContentWide,
+  .bsLessonWrap {
+    background-color: white !important;
+  }
+  .Indigo {
+    background-color: #4b0082 !important;
+  }
+}
+/*************************** Responsive Design - OPTIMIZED *****************************/
+@media (max-width: 768px) {
+  .PBRcolumn {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex-basis: 100%;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  .pbrBorder {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  .bsContentBox {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
+/*************************** Legacy Compatibility Notes *****************************/
+/*
+OPTIMIZATION UPDATES v2.0:
+
+1. Added CSS Custom Properties for Layout:
+   - --border-radius, --box-padding, --content-padding, etc.
+   - Consistent spacing and sizing across all components
+
+2. Enhanced Browser Compatibility:
+   - Added vendor prefixes for flexbox properties
+   - Improved support for older browsers (IE11, older Safari)
+
+3. Consolidated Icon Classes:
+   - Unified .pbr-icon and .pbr-icon_img .pbr-icon rules
+   - Consistent max-width handling across all icon classes
+
+4. Optimized Button Styling:
+   - Using CSS variables for consistent timing and colors
+   - Better hover state management
+
+5. Print Style Improvements:
+   - Added vendor prefixes for print flexbox support
+   - Optimized margin values using rem units
+
+6. Responsive Design Enhancements:
+   - Added vendor prefixes for mobile flexbox support
+   - Better responsive behavior for legacy PBR columns
+
+MIGRATION GUIDE FOR PUBLISHED COURSES:
+
+1. Background Colors:
+   - .LightBlue now uses teal (#3e87e6) instead of #75a7bd
+   - Add .legacy class for old behavior: <div class="LightBlue legacy">
+
+2. Centered Icons:
+   - .centered-icon now responsive (max-width: 175px, width: 100%)
+   - Add .legacy class for old behavior: <img class="centered-icon legacy">
+   - Use new .icon_img class for best results
+
+3. Padding Updates:
+   - Background color classes now use 15px padding (was 10px)
+   - Legacy courses will automatically inherit new padding
+
+4. New Recommended Classes:
+   - Use .bsLessonWrap instead of .lessonWrap for new content
+   - Use .bsContentBox/.bsContentWide instead of .pbrBorder/.pbrWide
+   - These provide better Bootstrap integration and print support
+
+5. Color Variables:
+   - Now using CSS custom properties (--federal-blue, etc.)
+   - Added layout variables for consistent spacing
+   - Fallback values provided for older browsers
+*/

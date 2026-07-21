@@ -1,0 +1,420 @@
+/*************************** Font Face Section *****************************/
+@each $weight, $style, $suffix in (
+    (100, normal, Thin),
+    (200, normal, ExtraLight),
+    (300, normal, Light),
+    (400, normal, Regular),
+    (500, normal, Medium),
+    (600, normal, SemiBold),
+    (700, normal, Bold),
+    (800, normal, ExtraBold),
+    (900, normal, Black),
+    (400, italic, Italic),
+    (700, italic, BoldItalic),
+    (900, italic, BlackItalic)
+) {
+    @font-face {
+        font-family: "Lexend";
+        src: url("https://images.nsa-images.org/Lexend/static/Lexend-#{$suffix}.ttf") format("truetype");
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+
+/*************************** Variables section. *****************************/
+$federal-blue: #151859 !default;
+$yellow: #E6A51C !default;
+$whitesmoke: #f5f5f5 !default;
+$green: #46A447 !default;
+$dark-yellow: #a99306 !default;
+$bright-yellow: #f4e031 !default;
+$pink: #F66E92 !default;
+$fa-default-color: $dark-yellow !default;
+$indigo: #777aa4 !default;
+$purple: #4D3257 !default;
+$teal: #3E87E6 !default;
+$red: #EF121B !default;
+$orange: #F47400 !default;
+$black: black !default;
+$white: white !default;
+$iceBlue: #d9eaff !default;
+$turquoise: #007bff !default;
+
+// Color variations using SCSS functions
+$primary-light: lighten($federal-blue, 20%) !default;
+$primary-dark: darken($federal-blue, 10%) !default;
+$light-darker: darken($whitesmoke, 15%) !default;
+$warning-dark: darken($yellow, 20%) !default;
+$teal-darker: darken($teal, 20%) !default;
+$purple-darker: darken($purple, 20%) !default;
+
+// Define variables for colors from Moodle 3.10
+$dark-blue: $federal-blue;
+$light-blue: $teal;
+$dark-text: $federal-blue;
+$light-text: $whitesmoke;
+$border-color: $federal-blue;
+$light-gray: darken($whitesmoke, 20%) !default;
+
+$primary: $federal-blue !default;
+$success: $green !default;
+$info: $teal !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $light-text !default;
+$dark: $black !default;
+$secondary: $teal-darker !default;
+
+$course-content-maxwidth: 92% !default;
+
+//$activity-icon-administration-bg: #da58ef !default;
+//$activity-icon-assessment-bg: #f90086 !default;
+//$activity-icon-collaboration-bg: #5b40ff !default;
+//$activity-icon-communication-bg: #eb6200 !default;
+//$activity-icon-content-bg: #0099ad !default;
+//$activity-icon-interactivecontent-bg: #8d3d1b !default;
+
+//configure activity icon filters for specific colors at https://codepen.io/sosuke/pen/Pjoqqp
+
+$activity-icon-administration-filter: invert(45%) sepia(46%) saturate(3819%) hue-rotate(260deg) brightness(101%) contrast(87%) !default;
+$activity-icon-assessment-filter: invert(36%) sepia(98%) saturate(6969%) hue-rotate(315deg) brightness(90%) contrast(119%) !default;
+$activity-icon-collaboration-filter: invert(25%) sepia(54%) saturate(6226%) hue-rotate(245deg) brightness(100%) contrast(102%) !default;
+$activity-icon-communication-filter: invert(48%) sepia(74%) saturate(4887%) hue-rotate(11deg) brightness(102%) contrast(101%) !default;
+$activity-icon-content-filter: invert(51%) sepia(88%) saturate(359%) hue-rotate(71deg) brightness(91%) contrast(82%);
+$activity-icon-interactivecontent-filter: invert(25%) sepia(63%) saturate(1152%) hue-rotate(344deg) brightness(94%) contrast(91%) !default;
+
+
+/*************************** Import section  *****************************/
+@import "fontawesome";
+@import "bootstrap";
+@import "moodle";
+
+/*************************** Rules section ****************************/
+html {
+    font: 100%/1.15em "Lexend", sans-serif;
+}
+
+body {
+    font-family: "Lexend", sans-serif;
+    color: $dark;
+}
+
+a {
+   color: $teal-darker;
+   text-decoration: none;
+
+   &:visited {
+       color: $purple-darker;
+   }
+
+   &:hover, &:focus {
+       color: $teal;
+       text-decoration: underline;
+       cursor: pointer;
+   }
+
+   &:focus {
+       outline: 2px solid $teal; // Add focus outline for accessibility
+       outline-offset: 2px; // Ensure the outline is visible outside the element
+   }
+}
+
+i, .largeIcon, .medIcon ,icon {
+    color: $dark-yellow;
+}
+
+.largeIcon {
+    font-size: 4rem;
+}
+
+.medIcon {
+    font-size: 3rem;
+}
+
+//K Brown Template
+.template h1 {
+    font-weight: bold;
+    text-align: center;
+}
+
+.template h2 {
+    font-weight: bold;
+    text-align: left;
+}
+
+.template h3 {
+    font-weight: bold;
+    font-style: italic;
+    text-align: left;
+}
+
+//Moodle 3 PBR Styles
+.PBRcolumns-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.PBRcolumn {
+    flex-basis: 23%;
+    margin-right: 2%;
+    box-sizing: border-box;
+    padding: 10px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.LightBlue {
+    background-color: $iceBlue;
+    color: $dark-text;
+}
+
+//NSA Background Styles
+.DarkBlue, .LightBlue, .Yellow, .BrightYellow, .Orange, .iceBlue, .turquoise {
+    padding: 15px;
+
+    &.DarkBlue {
+        background-color: $primary;
+        color: $whitesmoke;
+    }
+
+    &.LightBlue {
+        background-color: $teal;
+        color: $black;
+    }
+
+    &.Yellow {
+        background-color: $yellow;
+        color: $primary;
+    }
+
+    &.BrightYellow {
+        background-color: $bright-yellow;
+        color: $primary-dark;
+    }
+
+    &.Orange {
+        background-color: $orange;
+        color: $primary-dark;
+    }
+    //K Brown Custom Colors
+    &.turquoise {
+        background-color: $turquoise;
+        color: $light-text;
+    }
+
+    &.iceBlue {
+        background-color: $iceBlue;
+        color: $dark-text;
+    }
+}
+
+
+
+//Navigation Styles
+nav[aria-label="Site navigation"] {
+    background-color: $primary !important;
+
+    .nav-link, .navbar-brand, #lang-menu-toggle, .login a, .input-group label {
+        color: $white !important;
+    }
+
+    .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+        background-color: $dark-yellow;
+    }
+
+    .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: $white;
+        outline: 0.5px solid $dark-yellow;
+    }
+
+    i, .largeIcon, .medIcon {
+        color: $white !important;
+    }    
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus
+ {
+    background-color: $dark-yellow !important;
+    text-decoration: none !important;
+    color: $white !important;
+}
+
+nav[aria-label="Site navigation"] {
+    color: $white !important;
+    background-color: $primary;
+}
+
+.navbar-toggler {
+    background-color: $dark-yellow !important;
+}
+
+
+//PBR Styles
+.wrap {
+    width: 100%;
+    max-width: contain;
+    overflow-wrap: break-word;
+}
+
+.lessonWrap {
+    display: flex;
+    gap: 5px;
+    max-width: contain;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-wrap: break-word;
+}
+
+.pbrBorder {
+    border: 2px solid black;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    padding: 20px;
+    margin-right: 15px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+/*for cols that area the full width of a row with PBR formatting */
+.pbrWide {
+        border: 2px solid black;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        padding: 20px;
+        margin-right: 15px;
+    }
+
+    //PBR Utility Styles
+    .next-page {
+        display: none; /* Ensures it takes no space on the page when hidden */
+        max-height: 0; /* Prevents it from taking up space when not printed */
+    }
+    //PBR Print Styles
+
+    @media print {
+        .page-break-before {
+            display: block; /* Display only during printing */
+            page-break-before: always; /* Forces a page break before this element */
+        }
+
+        .next-page,
+        .page-break-after {
+            display: block; /* Display only during printing */
+            page-break-after: always; /* Forces a page break after this element */
+            max-height: auto; /* Ensures it takes up space when printed */
+        }
+
+        .avoid-break {
+            page-break-inside: avoid; /* Prevents breaking inside this element */
+        }
+
+        html, body, .pbrBorder {
+            background-color: $white !important; /* Ensure no background color when printing */
+        }
+    }
+    // Default button styles
+    $button-bg: $white !default;
+
+    @mixin button-styles($border-color) {
+        background-color: $button-bg;
+        border: 2px solid $border-color;
+        color: $border-color;
+        padding: 5px 10px; // Reduce button size from 10px 20px
+        border-radius: 50px; // Pillbox shape
+        font-size: 1rem;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); // Subtle shadow
+        transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; // Smooth transitions
+
+        &:hover {
+            border: 2px solid darken($border-color, 30%);
+            box-shadow: none; // Remove shadow on hover
+        }
+
+        &:focus {
+            outline: 2px solid lighten($border-color, 30%); // Add focus outline for accessibility
+            outline-offset: 2px; // Ensure the outline is visible outside the element
+        }
+    }
+    //Bootstrap Variations
+    // Generate button classes dynamically
+    @each $type, $color in ( primary: $primary, warning: $warning, success: $success, danger: $danger, info: $info, secondary: $secondary ) {
+        .btn-#{$type} {
+            @include button-styles($color);
+        }
+    }
+
+    .course-content {
+        max-width: $course-content-maxwidth;
+        margin: 0 auto; // Center align content
+        padding: 0 10px; // Add some padding for better spacing
+    }
+
+    $right-drawer-width: 400px !default; // Increase right drawer
+
+    .drawer-right {
+        width: $right-drawer-width !important;
+        max-width: $right-drawer-width !important;
+    }
+
+    .region-main-width {
+        margin-right: $right-drawer-width !important;
+        transition: margin-right 0.3s ease-in-out; // Smooth transition
+    }
+
+    body.drawer-open-right .region-main-width {
+        margin-right: $right-drawer-width !important;
+    }
+
+    body:not(.drawer-open-right) .region-main-width {
+        margin-right: 0 !important;
+    }
+    // Responsive adjustments
+    $right-drawer-width-mobile: 300px !default;
+
+    @media (max-width: 768px) {
+        .drawer-right {
+            width: 100% !important; // Full width for small screens
+            max-width: 100% !important;
+            position: relative; // Position below the main content
+            margin-top: 20px; // Add spacing from the main content
+        }
+
+        .region-main-width {
+            margin-right: 0 !important; // Remove margin to accommodate the drawer below
+        }
+
+        body.drawer-open-right .region-main-width {
+            margin-right: 0 !important; // Ensure no margin when drawer is open
+        }
+
+        body:not(.drawer-open-right) .region-main-width {
+            margin-right: 0 !important;
+        }
+    }
+
+    // Image alignment utility classes
+.image-left {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.image-right {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+// Clearfix for containing floated elements
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}

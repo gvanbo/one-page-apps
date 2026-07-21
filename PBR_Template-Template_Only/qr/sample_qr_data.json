@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://www.example.com",
+    "title": "Example Website",
+    "logo_name": "nsa-star-logo.png",
+    "filename": "example_qr.png"
+  },
+  {
+    "url": "https://www.google.com",
+    "title": "Google Search Engine",
+    "logo_name": "",
+    "filename": "google_qr.png"
+  },
+  {
+    "url": "https://www.github.com/gvanbo",
+    "title": "My GitHub Profile",
+    "logo_name": "github_logo.png",
+    "filename": "github_profile_qr.png"
+  }
+]

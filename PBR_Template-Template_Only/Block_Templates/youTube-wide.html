@@ -1,0 +1,38 @@
+<div class="row mx-3 bsContentWide shadow mt-4">
+  <div class="col-3">
+    <ul class="list-unstyled">
+      <li>
+        <img
+          src="https://images.nsa-images.org/assets/icons/Watch-PC.svg"
+          alt="Watch icon"
+          class="pbr-icon_img"
+          width="90"
+        />
+      </li>
+      <li>
+        <a href="{{video_url}}" target="_blank" rel="noopener" aria-label="Open video">
+          <img src="{{video_qr}}" alt="QR code for video" class="pbr-icon_img" width="90" />
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col p-3">
+    <h3>Watch</h3>
+    <p class="mt-2">{{video_description}}</p>
+    <p class="text-muted ">An adult should supervise you on YouTube.</p>
+    <hr class="w-75 mx-auto" />
+    <div class="text-start ">
+      <b>Need help?</b>
+      <ul class="list-unstyled mt-1 mb-0">
+        <li>
+          <b>Link:</b>
+          <code>{{video_url}}</code>
+        </li>
+        <li>
+          <b>Search:</b>
+          "{{video_search_title}}" by "{{video_channel}}"
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
